@@ -31,6 +31,13 @@ yarn-error.log*
 # vercel
 .vercel
 
+# bookings data store (local JSON)
+/data/bookings.json
+.env.local.bak
+
+# local working artefacts (not for the repo)
+/temporary screenshots/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

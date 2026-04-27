@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anova Co. — Brand Identity Guidelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green:    #1B2B21;
+  --green-mid:#2A4232;
+  --green-lt: #3D5E48;
+  --gold:     #D4AF37;
+  --gold-lt:  #E8D07A;
+  --gold-dim: rgba(212,175,55,0.15);
+  --alabaster:#F4F1ED;
+  --alabaster2:#EDE9E3;
+  --charcoal: #333333;
+  --charcoal2:#555555;
+  --muted:    #888880;
+  --border:   rgba(51,51,51,0.1);
+  --border-g: rgba(27,43,33,0.12);
+  --serif: 'Cormorant Garamond', serif;
+  --display: 'Playfair Display', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--alabaster);color:var(--charcoal);line-height:1.6;}
+
+/* ── COVER PAGE ── */
+.cover{
+  min-height:100vh;background:var(--green);
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:5rem;position:relative;overflow:hidden;
+}
+.cover::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 100% 0%, rgba(212,175,55,0.08) 0%, transparent 60%);
+}
+.cover::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,0.4),transparent);
+}
+.cover-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;}
+.cover-logo{display:flex;align-items:center;gap:1rem;}
+.cover-logo-text{
+  font-family:var(--sans);font-size:0.75rem;
+  letter-spacing:0.28em;text-transform:uppercase;
+  color:rgba(244,241,237,0.5);font-weight:300;
+}
+.cover-doc-type{
+  font-family:var(--sans);font-size:0.68rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(212,175,55,0.6);font-weight:300;
+  border:1px solid rgba(212,175,55,0.2);
+  padding:0.4rem 1rem;border-radius:2px;
+}
+.cover-center{position:relative;z-index:1;padding:4rem 0;}
+.cover-eyebrow{
+  font-family:var(--sans);font-size:0.7rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--gold);font-weight:300;
+  margin-bottom:2rem;display:flex;align-items:center;gap:1rem;
+}
+.cover-eyebrow::before{content:'';width:40px;height:1px;background:var(--gold);opacity:0.5;}
+.cover-title{
+  font-family:var(--display);font-size:clamp(4rem,8vw,7rem);
+  font-weight:400;line-height:0.95;letter-spacing:-0.02em;
+  color:var(--alabaster);margin-bottom:0.5rem;
+}
+.cover-title em{font-style:italic;color:var(--gold);}
+.cover-subtitle{
+  font-family:var(--sans);font-size:1rem;font-weight:300;
+  color:rgba(244,241,237,0.45);letter-spacing:0.06em;
+  margin-top:2rem;
+}
+.cover-bottom{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  position:relative;z-index:1;
+}
+.cover-tagline{
+  font-family:var(--serif);font-size:1.4rem;font-style:italic;
+  color:rgba(244,241,237,0.4);
+}
+.cover-meta{text-align:right;}
+.cover-meta p{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(244,241,237,0.25);line-height:2;}
+
+/* ── PAGE LAYOUT ── */
+.doc{max-width:1100px;margin:0 auto;padding:6rem 4rem;}
+.chapter{margin-bottom:7rem;}
+.chapter-header{
+  display:grid;grid-template-columns:80px 1fr;gap:3rem;
+  align-items:baseline;padding-bottom:2rem;
+  border-bottom:1px solid var(--border);margin-bottom:4rem;
+}
+.chapter-num{
+  font-family:var(--display);font-size:3.5rem;font-weight:400;
+  color:var(--gold);opacity:0.4;line-height:1;font-style:italic;
+}
+.chapter-info{}
+.chapter-tag{
+  font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold);font-weight:400;margin-bottom:0.5rem;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.chapter-tag::before{content:'';width:20px;height:1px;background:var(--gold);}
+.chapter-title{
+  font-family:var(--display);font-size:2.5rem;font-weight:400;
+  line-height:1.1;color:var(--green);letter-spacing:-0.01em;
+}
+.chapter-title em{font-style:italic;}
+
+/* section within chapter */
+.sub-section{margin-bottom:4rem;}
+h3.sub-title{
+  font-family:var(--sans);font-size:0.72rem;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--muted);font-weight:400;
+  margin-bottom:1.5rem;padding-bottom:0.8rem;
+  border-bottom:1px solid var(--border);
+}
+p.note{font-size:0.85rem;line-height:1.75;color:var(--charcoal2);max-width:640px;margin-bottom:2rem;}
+
+/* divider */
+.chapter-divider{
+  height:1px;
+  background:linear-gradient(90deg,var(--green),rgba(212,175,55,0.3),transparent);
+  margin:7rem 0;
+}
+
+/* ── LOGO SECTION ── */
+.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2.5rem;}
+.logo-box{
+  border:1px solid var(--border);border-radius:4px;
+  padding:3.5rem 3rem;
+  display:flex;flex-direction:column;gap:2.5rem;
+}
+.logo-box.bg-green{background:var(--green);border-color:transparent;}
+.logo-box.bg-gold{background:var(--gold);border-color:transparent;}
+.logo-box.bg-charcoal{background:var(--charcoal);border-color:transparent;}
+.logo-box.bg-alabaster{background:var(--alabaster2);}
+.lbox-label{
+  font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--muted);font-weight:400;
+}
+.logo-box.bg-green .lbox-label,.logo-box.bg-charcoal .lbox-label{color:rgba(244,241,237,0.3);}
+.logo-box.bg-gold .lbox-label{color:rgba(27,43,33,0.4);}
+
+/* LOGO MARK SVG compositions */
+.logo-mark-wrap{display:flex;align-items:center;gap:1.2rem;}
+.lm-wordmark{
+  font-family:var(--sans);font-weight:300;
+  letter-spacing:0.22em;text-transform:uppercase;
+  font-size:1.1rem;color:var(--charcoal);
+}
+.lm-wordmark.on-dark{color:var(--alabaster);}
+.lm-wordmark.on-gold{color:var(--green);}
+.lm-wordmark span{color:var(--gold);}
+.lm-wordmark.on-green span{color:var(--gold);}
+
+/* Logomark variations row */
+.logo-marks-row{display:flex;gap:3rem;align-items:center;flex-wrap:wrap;padding:2.5rem;background:var(--alabaster2);border-radius:4px;border:1px solid var(--border);}
+.logo-mark-item{display:flex;flex-direction:column;align-items:center;gap:0.8rem;}
+.lmi-label{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+
+/* clear space */
+.clearspace-wrap{
+  display:flex;align-items:center;justify-content:center;
+  padding:4rem;border:1px solid var(--border);border-radius:4px;
+  background:white;
+}
+.cs-inner{position:relative;padding:1.5rem;}
+.cs-inner::before{
+  content:'';position:absolute;inset:0;
+  border:1px dashed rgba(212,175,55,0.4);border-radius:2px;
+}
+.cs-label{
+  position:absolute;font-size:0.6rem;color:var(--gold);
+  font-family:var(--sans);letter-spacing:0.08em;
+  opacity:0.7;
+}
+.cs-label.t{top:-1.6rem;left:50%;transform:translateX(-50%);}
+.cs-label.b{bottom:-1.6rem;left:50%;transform:translateX(-50%);}
+.cs-label.l{left:-2.8rem;top:50%;transform:translateY(-50%) rotate(-90deg);}
+.cs-label.r{right:-2.8rem;top:50%;transform:translateY(-50%) rotate(90deg);}
+
+/* ── COLOUR SYSTEM ── */
+.palette-primary{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-radius:6px;overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;}
+.swatch-lg{
+  padding:2.5rem 1.5rem 1.5rem;
+  display:flex;flex-direction:column;justify-content:flex-end;min-height:180px;
+}
+.swatch-name{font-family:var(--sans);font-size:0.8rem;font-weight:500;margin-bottom:0.2rem;}
+.swatch-hex{font-size:0.7rem;opacity:0.6;font-family:monospace;letter-spacing:0.06em;}
+.swatch-role{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.45;margin-top:0.4rem;}
+
+.palette-extended{display:grid;grid-template-columns:repeat(9,1fr);gap:0;border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+.swatch-sm{height:60px;}
+
+.colour-combos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-top:2rem;}
+.combo-card{border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+.combo-preview{height:100px;display:flex;align-items:center;justify-content:center;}
+.combo-info{padding:0.8rem 1rem;background:white;}
+.combo-name{font-size:0.75rem;font-weight:500;margin-bottom:0.2rem;}
+.combo-desc{font-size:0.68rem;color:var(--muted);}
+
+/* ── TYPOGRAPHY ── */
+.type-specimen{display:flex;flex-direction:column;gap:0;}
+.type-row{
+  display:grid;grid-template-columns:200px 1fr;
+  gap:3rem;align-items:start;
+  padding:2.5rem 0;border-bottom:1px solid var(--border);
+}
+.type-row:last-child{border-bottom:none;}
+.type-meta{padding-top:0.4rem;}
+.type-role{font-size:0.72rem;font-weight:500;color:var(--charcoal);margin-bottom:0.4rem;letter-spacing:0.04em;}
+.type-specs{font-size:0.68rem;color:var(--muted);line-height:1.8;font-family:monospace;}
+.type-preview{}
+
+/* font pairing card */
+.pairing-card{
+  border:1px solid var(--border);border-radius:4px;
+  padding:3rem;background:white;margin-bottom:1.5rem;
+}
+.pairing-label{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;}
+
+/* ── VOICE & TONE ── */
+.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.voice-card{border:1px solid var(--border);border-radius:4px;padding:2rem;}
+.voice-title{
+  font-family:var(--display);font-size:1.1rem;font-style:italic;
+  color:var(--green);margin-bottom:1.2rem;
+}
+.voice-list{list-style:none;}
+.voice-list li{
+  font-size:0.85rem;line-height:1.7;color:var(--charcoal2);
+  padding:0.5rem 0;border-bottom:1px solid var(--border);
+  display:flex;gap:0.8rem;
+}
+.voice-list li:last-child{border-bottom:none;}
+.voice-list li::before{content:'—';color:var(--gold);flex-shrink:0;}
+
+.example-card{border-radius:4px;padding:1.5rem 2rem;margin-bottom:1rem;}
+.example-card.good{background:rgba(27,43,33,0.04);border-left:3px solid var(--green);}
+.example-card.bad{background:rgba(220,50,50,0.04);border-left:3px solid rgba(220,50,50,0.4);}
+.example-label{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:0.6rem;}
+.example-label.good{color:var(--green);}
+.example-label.bad{color:rgba(200,50,50,0.7);}
+.example-text{font-size:0.9rem;line-height:1.7;color:var(--charcoal);}
+.example-card.good .example-text{font-family:var(--serif);font-style:italic;}
+
+/* ── LOGO DOS DONTS ── */
+.dosdonts{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.dd-card{border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+.dd-preview{height:160px;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.dd-label{
+  padding:0.9rem 1.2rem;
+  display:flex;align-items:center;gap:0.6rem;
+  font-size:0.78rem;border-top:1px solid var(--border);
+  background:white;
+}
+.tag-do{color:#2d7a3a;font-weight:600;font-size:0.7rem;letter-spacing:0.1em;}
+.tag-dont{color:#c0392b;font-weight:600;font-size:0.7rem;letter-spacing:0.1em;}
+
+/* ── BRAND APPLICATIONS ── */
+.apps-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;}
+.app-card{border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.app-preview{height:200px;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.app-label{padding:0.9rem 1.2rem;background:white;font-size:0.72rem;color:var(--muted);border-top:1px solid var(--border);letter-spacing:0.08em;text-transform:uppercase;font-weight:500;}
+
+/* ── BACK COVER ── */
+.back-cover{
+  background:var(--green);padding:5rem;
+  display:flex;flex-direction:column;justify-content:space-between;min-height:50vh;
+  position:relative;overflow:hidden;
+}
+.back-cover::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;top:0;
+  background:radial-gradient(ellipse 60% 80% at 0% 100%, rgba(212,175,55,0.06) 0%, transparent 60%);
+}
+.bc-content{position:relative;z-index:1;}
+.bc-tagline{
+  font-family:var(--display);font-size:clamp(2rem,5vw,4rem);
+  font-weight:400;color:var(--alabaster);line-height:1.1;
+  letter-spacing:-0.01em;
+}
+.bc-tagline em{font-style:italic;color:var(--gold);}
+.bc-bottom{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  position:relative;z-index:1;
+}
+.bc-contact p{font-size:0.75rem;color:rgba(244,241,237,0.4);line-height:2;letter-spacing:0.06em;}
+.bc-contact a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- ══════════════
+     COVER
+══════════════ -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-logo">
+      <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="4" fill="rgba(212,175,55,0.15)"/>
+        <rect x="1" y="1" width="38" height="38" rx="3" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#D4AF37" opacity="0.9"/>
+        <rect x="14" y="22" width="12" height="2" rx="1" fill="rgba(212,175,55,0.4)"/>
+      </svg>
+      <span class="cover-logo-text">Anova Co.</span>
+    </div>
+    <span class="cover-doc-type">Brand Identity System</span>
+  </div>
+
+  <div class="cover-center">
+    <p class="cover-eyebrow">Identity & Brand Guidelines</p>
+    <h1 class="cover-title">The Anova Co.<br/><em>Brand Standard.</em></h1>
+    <p class="cover-subtitle">Version 1.0 — Confidential — Toronto, Canada</p>
+  </div>
+
+  <div class="cover-bottom">
+    <p class="cover-tagline">"Growth, engineered."</p>
+    <div class="cover-meta">
+      <p>Anova Co. © 2025</p>
+      <p>anovaco.ca</p>
+      <p>ano@anovaco.ca</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════
+     DOCUMENT BODY
+══════════════ -->
+<div class="doc">
+
+  <!-- ══ 01 LOGO ══ -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">01</div>
+      <div class="chapter-info">
+        <p class="chapter-tag">Identity</p>
+        <h2 class="chapter-title">The Logo &amp;<br/><em>Brand Mark</em></h2>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3 class="sub-title">Primary Logo — All Variations</h3>
+      <p class="note">The Anova Co. identity is built on a sophisticated geometric 'A' monogram paired with a thin, spaced wordmark. The logo exists in three primary colourways — always choose the version with maximum contrast against its background.</p>
+
+      <div class="logo-grid">
+
+        <!-- Light / Alabaster -->
+        <div class="logo-box bg-alabaster">
+          <span class="lbox-label">Primary — Alabaster Canvas</span>
+          <div style="display:flex;flex-direction:column;gap:2rem;">
+            <!-- Full logo -->
+            <div class="logo-mark-wrap">
+              <svg width="44" height="44" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="5" fill="#1B2B21"/>
+                <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+                <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+              </svg>
+              <span class="lm-wordmark">Anova <span style="color:var(--gold);font-weight:400;">Co.</span></span>
+            </div>
+            <!-- Wordmark only -->
+            <div style="padding-left:4px;">
+              <span style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--green);">ANOVA <span style="color:var(--gold);">CO.</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark / Forest Green -->
+        <div class="logo-box bg-green">
+          <span class="lbox-label">Reversed — Forest Green</span>
+          <div style="display:flex;flex-direction:column;gap:2rem;">
+            <div class="logo-mark-wrap">
+              <svg width="44" height="44" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="5" fill="rgba(244,241,237,0.1)"/>
+                <rect x="0.5" y="0.5" width="39" height="39" rx="4.5" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+                <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+                <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+              </svg>
+              <span class="lm-wordmark on-dark">Anova <span>Co.</span></span>
+            </div>
+            <div style="padding-left:4px;">
+              <span style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--alabaster);">ANOVA <span style="color:var(--gold);">CO.</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gold accent -->
+        <div class="logo-box bg-charcoal">
+          <span class="lbox-label">Premium — Charcoal</span>
+          <div style="display:flex;flex-direction:column;gap:2rem;">
+            <div class="logo-mark-wrap">
+              <svg width="44" height="44" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="5" fill="#D4AF37"/>
+                <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#1B2B21"/>
+                <rect x="14" y="22" width="12" height="2" rx="1" fill="rgba(27,43,33,0.3)"/>
+              </svg>
+              <span class="lm-wordmark on-dark">Anova <span style="color:var(--gold-lt);">Co.</span></span>
+            </div>
+            <div style="padding-left:4px;">
+              <span style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:1.1rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);">ANOVA <span style="color:rgba(212,175,55,0.5);">CO.</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monochrome -->
+        <div class="logo-box" style="background:white;">
+          <span class="lbox-label">Monochrome — Single Colour</span>
+          <div style="display:flex;flex-direction:column;gap:2rem;">
+            <div class="logo-mark-wrap">
+              <svg width="44" height="44" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="5" fill="#333333"/>
+                <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="white"/>
+                <rect x="14" y="22" width="12" height="2" rx="1" fill="rgba(255,255,255,0.4)"/>
+              </svg>
+              <span class="lm-wordmark" style="color:#333;">Anova <span style="color:#333;opacity:0.5;">Co.</span></span>
+            </div>
+            <p style="font-size:0.75rem;color:var(--muted);line-height:1.6;">Use only when colour printing is unavailable. Never use on coloured backgrounds.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Icon mark variants -->
+      <h3 class="sub-title" style="margin-top:3rem;">The Mark — Icon Variations</h3>
+      <div class="logo-marks-row">
+        <div class="logo-mark-item">
+          <svg width="56" height="56" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="5" fill="#1B2B21"/>
+            <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+            <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+          </svg>
+          <span class="lmi-label">Standard</span>
+        </div>
+        <div class="logo-mark-item">
+          <svg width="56" height="56" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="20" fill="#1B2B21"/>
+            <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+            <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+          </svg>
+          <span class="lmi-label">Circle</span>
+        </div>
+        <div class="logo-mark-item">
+          <svg width="56" height="56" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="5" fill="#D4AF37"/>
+            <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#1B2B21"/>
+            <rect x="14" y="22" width="12" height="2" rx="1" fill="rgba(27,43,33,0.25)"/>
+          </svg>
+          <span class="lmi-label">Gold</span>
+        </div>
+        <div class="logo-mark-item">
+          <svg width="56" height="56" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="5" fill="none" stroke="#1B2B21" stroke-width="1.5"/>
+            <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#1B2B21"/>
+            <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+          </svg>
+          <span class="lmi-label">Outline</span>
+        </div>
+        <div class="logo-mark-item">
+          <svg width="56" height="56" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="5" fill="#1B2B21"/>
+            <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="none" stroke="#D4AF37" stroke-width="1.2"/>
+            <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+          </svg>
+          <span class="lmi-label">Engraved</span>
+        </div>
+        <div class="logo-mark-item">
+          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="5" fill="#1B2B21"/>
+            <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+            <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+          </svg>
+          <span class="lmi-label">Favicon</span>
+        </div>
+        <div class="logo-mark-item">
+          <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="5" fill="#1B2B21"/>
+            <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+            <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+          </svg>
+          <span class="lmi-label">16px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clear space -->
+    <div class="sub-section">
+      <h3 class="sub-title">Clear Space Rule</h3>
+      <p class="note">Always maintain a minimum clear space equal to the cap-height of the "A" in the wordmark around all sides of the logo. Never crowd it.</p>
+      <div class="clearspace-wrap">
+        <div class="cs-inner">
+          <span class="cs-label t">1× cap-height</span>
+          <span class="cs-label b">1× cap-height</span>
+          <span class="cs-label l">1×</span>
+          <span class="cs-label r">1×</span>
+          <div class="logo-mark-wrap" style="padding:0.5rem;">
+            <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+              <rect width="40" height="40" rx="5" fill="#1B2B21"/>
+              <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+              <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+            </svg>
+            <span class="lm-wordmark">Anova <span style="color:var(--gold);">Co.</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dos and donts -->
+    <div class="sub-section">
+      <h3 class="sub-title">Logo Usage — Do's & Don'ts</h3>
+      <div class="dosdonts">
+        <div class="dd-card">
+          <div class="dd-preview" style="background:var(--alabaster);">
+            <div class="logo-mark-wrap">
+              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="5" fill="#1B2B21"/><path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/><rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/></svg>
+              <span class="lm-wordmark">Anova <span style="color:var(--gold);">Co.</span></span>
+            </div>
+          </div>
+          <div class="dd-label"><span class="tag-do">✓ DO</span> Use on clean, high-contrast backgrounds</div>
+        </div>
+        <div class="dd-card">
+          <div class="dd-preview" style="background:#1B2B21;">
+            <div class="logo-mark-wrap">
+              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="5" fill="rgba(244,241,237,0.08)"/><rect x="0.5" y="0.5" width="39" height="39" rx="4.5" stroke="rgba(212,175,55,0.2)" stroke-width="1" fill="none"/><path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/><rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/></svg>
+              <span class="lm-wordmark on-dark">Anova <span>Co.</span></span>
+            </div>
+          </div>
+          <div class="dd-label"><span class="tag-do">✓ DO</span> Use the reversed version on dark backgrounds</div>
+        </div>
+        <div class="dd-card">
+          <div class="dd-preview" style="background:linear-gradient(135deg,#c0392b,#e74c3c);">
+            <div class="logo-mark-wrap" style="opacity:0.4;">
+              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="5" fill="#1B2B21"/><path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/><rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/></svg>
+              <span class="lm-wordmark">Anova <span style="color:var(--gold);">Co.</span></span>
+            </div>
+          </div>
+          <div class="dd-label"><span class="tag-dont">✗ DON'T</span> Place on busy or clashing colours</div>
+        </div>
+        <div class="dd-card">
+          <div class="dd-preview" style="background:var(--alabaster);">
+            <div class="logo-mark-wrap" style="transform:scaleX(1.4);opacity:0.4;">
+              <svg width="36" height="36" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="5" fill="#c0392b"/><path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="white"/></svg>
+              <span style="font-family:'DM Sans',sans-serif;font-size:1.1rem;letter-spacing:0.02em;color:#999;">Anova Co.</span>
+            </div>
+          </div>
+          <div class="dd-label"><span class="tag-dont">✗ DON'T</span> Stretch, recolour, or alter the mark</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-divider"></div>
+
+  <!-- ══ 02 COLOUR ══ -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">02</div>
+      <div class="chapter-info">
+        <p class="chapter-tag">Colour</p>
+        <h2 class="chapter-title">The Colour<br/><em>System</em></h2>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3 class="sub-title">Primary Palette</h3>
+      <p class="note">The Anova Co. palette is drawn from the natural world — deep forest, warm stone, aged gold. It communicates sophistication, trust, and precision. Never introduce colours outside this system without explicit approval.</p>
+
+      <div class="palette-primary">
+        <div class="swatch-lg" style="background:#1B2B21;">
+          <div class="swatch-name" style="color:#F4F1ED;">Deep Forest</div>
+          <div class="swatch-hex" style="color:rgba(244,241,237,0.5);">#1B2B21</div>
+          <div class="swatch-role" style="color:rgba(244,241,237,0.35);">Primary Brand</div>
+        </div>
+        <div class="swatch-lg" style="background:#D4AF37;">
+          <div class="swatch-name" style="color:#1B2B21;">Champagne Gold</div>
+          <div class="swatch-hex" style="color:rgba(27,43,33,0.5);">#D4AF37</div>
+          <div class="swatch-role" style="color:rgba(27,43,33,0.35);">Accent & Detail</div>
+        </div>
+        <div class="swatch-lg" style="background:#F4F1ED;border-right:1px solid var(--border);">
+          <div class="swatch-name" style="color:#333;">Warm Alabaster</div>
+          <div class="swatch-hex" style="color:rgba(51,51,51,0.4);">#F4F1ED</div>
+          <div class="swatch-role" style="color:rgba(51,51,51,0.3);">Primary Canvas</div>
+        </div>
+        <div class="swatch-lg" style="background:#333333;">
+          <div class="swatch-name" style="color:#F4F1ED;">Smoked Charcoal</div>
+          <div class="swatch-hex" style="color:rgba(244,241,237,0.4);">#333333</div>
+          <div class="swatch-role" style="color:rgba(244,241,237,0.25);">Body Text</div>
+        </div>
+      </div>
+
+      <h3 class="sub-title" style="margin-top:3rem;">Extended Green Scale</h3>
+      <div class="palette-extended">
+        <div class="swatch-sm" style="background:#0D1610;"></div>
+        <div class="swatch-sm" style="background:#131F17;"></div>
+        <div class="swatch-sm" style="background:#1B2B21;"></div>
+        <div class="swatch-sm" style="background:#2A4232;"></div>
+        <div class="swatch-sm" style="background:#3D5E48;"></div>
+        <div class="swatch-sm" style="background:#527A60;"></div>
+        <div class="swatch-sm" style="background:#7A9E87;"></div>
+        <div class="swatch-sm" style="background:#B2C8BB;"></div>
+        <div class="swatch-sm" style="background:#E8EFEa;border-right:1px solid var(--border);"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:0.5rem;">
+        <span style="font-size:0.62rem;color:var(--muted);">950 — Deepest</span>
+        <span style="font-size:0.62rem;color:var(--muted);">50 — Lightest</span>
+      </div>
+
+      <h3 class="sub-title" style="margin-top:3rem;">Colour Combinations</h3>
+      <div class="colour-combos">
+        <div class="combo-card">
+          <div class="combo-preview" style="background:#1B2B21;gap:0.5rem;flex-direction:column;align-items:flex-start;padding:2rem;">
+            <span style="font-family:'DM Sans',sans-serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);font-weight:300;">Premium</span>
+            <span style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#F4F1ED;font-style:italic;">Growth,<br/>engineered.</span>
+          </div>
+          <div class="combo-info">
+            <div class="combo-name">Forest + Alabaster + Gold</div>
+            <div class="combo-desc">Hero sections, dark panels, email headers</div>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="combo-preview" style="background:#F4F1ED;gap:0.5rem;flex-direction:column;align-items:flex-start;padding:2rem;">
+            <span style="font-family:'DM Sans',sans-serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:#1B2B21;font-weight:300;">Services</span>
+            <span style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#1B2B21;font-style:italic;">Every service<br/>you need.</span>
+          </div>
+          <div class="combo-info">
+            <div class="combo-name">Alabaster + Forest + Gold</div>
+            <div class="combo-desc">Body sections, cards, content areas</div>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="combo-preview" style="background:#D4AF37;gap:0.5rem;flex-direction:column;align-items:flex-start;padding:2rem;">
+            <span style="font-family:'DM Sans',sans-serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:#1B2B21;font-weight:300;opacity:0.6;">Featured</span>
+            <span style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#1B2B21;font-style:italic;">Most<br/>Popular.</span>
+          </div>
+          <div class="combo-info">
+            <div class="combo-name">Gold + Forest</div>
+            <div class="combo-desc">CTAs, badges, featured elements only</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-divider"></div>
+
+  <!-- ══ 03 TYPOGRAPHY ══ -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">03</div>
+      <div class="chapter-info">
+        <p class="chapter-tag">Typography</p>
+        <h2 class="chapter-title">The Type<br/><em>System</em></h2>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3 class="sub-title">Font Pairing</h3>
+      <p class="note">Anova Co. uses a two-font system — a refined serif for display and headlines, and a clean geometric sans for body text and UI. This pairing embodies the brand's duality: timeless sophistication meets modern precision.</p>
+
+      <div class="pairing-card">
+        <div class="pairing-label">Display / Headlines — Cormorant Garamond or Playfair Display</div>
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:400;color:var(--green);line-height:1.1;letter-spacing:-0.01em;margin-bottom:0.5rem;">
+          The art of growth,<br/><em>precisely executed.</em>
+        </div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:1rem;letter-spacing:0.08em;">PLAYFAIR DISPLAY — WEIGHT 400 / ITALIC 400 — USE FOR: H1, H2, HERO TEXT, PULL QUOTES</div>
+      </div>
+
+      <div class="pairing-card" style="margin-top:1.5rem;">
+        <div class="pairing-label">Body / UI — DM Sans</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:1rem;line-height:1.8;color:var(--charcoal2);max-width:600px;margin-bottom:1rem;">
+          Anova Co. helps local businesses build a powerful online presence that drives real growth — through smart digital strategy, AI automation, and hands-on execution that delivers measurable results every month.
+        </div>
+        <div style="font-size:0.75rem;color:var(--muted);letter-spacing:0.08em;">DM SANS — WEIGHT 300/400/500 — USE FOR: BODY TEXT, LABELS, UI ELEMENTS, NAVIGATION</div>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3 class="sub-title">Type Scale</h3>
+      <div class="type-specimen">
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">Display / Hero</div>
+            <div class="type-specs">Playfair Display<br/>Weight: 400<br/>Size: 64–96px<br/>Leading: 0.95<br/>Tracking: -0.02em</div>
+          </div>
+          <div style="font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:400;line-height:0.95;letter-spacing:-0.02em;color:var(--green);">Growth,<br/><em>engineered.</em></div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">Heading 1</div>
+            <div class="type-specs">Playfair Display<br/>Weight: 400 / Italic<br/>Size: 36–48px<br/>Leading: 1.1</div>
+          </div>
+          <div style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:400;line-height:1.1;color:var(--green);">Every service your business needs<br/><em>to dominate locally.</em></div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">Heading 2</div>
+            <div class="type-specs">Playfair Display<br/>Weight: 700<br/>Size: 24–32px<br/>Leading: 1.2</div>
+          </div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;line-height:1.2;color:var(--green);">Simple process. Real results.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">Section Tag</div>
+            <div class="type-specs">DM Sans<br/>Weight: 300<br/>Size: 11px<br/>Tracking: 0.22em<br/>Uppercase</div>
+          </div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:0.7rem;font-weight:300;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:1rem;">
+            <span style="width:24px;height:1px;background:var(--gold);display:inline-block;"></span>
+            What We Do
+          </div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">Body Large</div>
+            <div class="type-specs">DM Sans<br/>Weight: 300<br/>Size: 18px<br/>Leading: 1.75</div>
+          </div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:1.05rem;font-weight:300;line-height:1.75;color:var(--charcoal2);max-width:520px;">Anova Co. helps local businesses build a powerful online presence that drives real growth through smart digital strategy and AI automation.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">Body</div>
+            <div class="type-specs">DM Sans<br/>Weight: 400<br/>Size: 15px<br/>Leading: 1.7</div>
+          </div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:0.9rem;line-height:1.7;color:var(--charcoal2);max-width:520px;">We handle everything — from your Google Business profile and social media content to your website and AI automation — so you can focus on running your business while we grow it.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">Caption / Label</div>
+            <div class="type-specs">DM Sans<br/>Weight: 400<br/>Size: 11–12px<br/>Tracking: 0.08em</div>
+          </div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:0.72rem;color:var(--muted);letter-spacing:0.08em;">No commitment required · Free 30-min call · Results in 30 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-divider"></div>
+
+  <!-- ══ 04 VOICE ══ -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">04</div>
+      <div class="chapter-info">
+        <p class="chapter-tag">Voice & Tone</p>
+        <h2 class="chapter-title">How Anova Co.<br/><em>Communicates</em></h2>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <p class="note">Anova Co. speaks with the quiet confidence of a firm that doesn't need to shout. Every word is chosen deliberately. We are modern and bespoke — never generic, never corporate, never casual to the point of losing authority.</p>
+
+      <div style="border:1px solid var(--gold);border-radius:4px;padding:2.5rem;background:rgba(212,175,55,0.04);margin-bottom:3rem;">
+        <p style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Brand Tagline</p>
+        <p style="font-family:'Playfair Display',serif;font-size:2rem;font-style:italic;color:var(--green);line-height:1.2;">"Growth, engineered."</p>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:1rem;line-height:1.7;">Two words. The precision of engineering. The ambition of growth. Never alter the tagline. Use it consistently in email signatures, proposals, and closing statements.</p>
+      </div>
+
+      <div class="voice-grid">
+        <div class="voice-card">
+          <div class="voice-title">Anova Co. Is</div>
+          <ul class="voice-list">
+            <li>Modern & bespoke — every interaction feels tailored</li>
+            <li>Confident without arrogance — we prove, not proclaim</li>
+            <li>Precise — every word earns its place</li>
+            <li>Sophisticated — elevated language, never dumbed down</li>
+            <li>Direct — no fluff, no filler, no hedging</li>
+            <li>Warm — human and approachable beneath the polish</li>
+          </ul>
+        </div>
+        <div class="voice-card">
+          <div class="voice-title">Anova Co. Is Never</div>
+          <ul class="voice-list">
+            <li>Casual or slangy — we don't say "Hey!" or "Awesome!"</li>
+            <li>Corporate or jargon-heavy — no "synergise", "leverage", "solutions"</li>
+            <li>Pushy — we never pressure, we invite</li>
+            <li>Over-promising — we under-promise and over-deliver</li>
+            <li>Apologetic — we don't hedge or qualify unnecessarily</li>
+            <li>Verbose — if it can be said in 5 words, don't use 12</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3 class="sub-title">Voice Examples</h3>
+
+      <div class="example-card good">
+        <p class="example-label good">✓ Write Like This</p>
+        <p class="example-text">"We don't offer packages. Every engagement is built around your business, your market, and your goals."</p>
+      </div>
+      <div class="example-card bad" style="margin-bottom:1.5rem;">
+        <p class="example-label bad">✗ Not Like This</p>
+        <p class="example-text" style="color:rgba(51,51,51,0.5);">"We have amazing packages for all types of businesses at great prices that will really help you grow!"</p>
+      </div>
+
+      <div class="example-card good">
+        <p class="example-label good">✓ Write Like This</p>
+        <p class="example-text">"Before our call, we audit your entire online presence. You'll receive insights, not guesses."</p>
+      </div>
+      <div class="example-card bad" style="margin-bottom:1.5rem;">
+        <p class="example-label bad">✗ Not Like This</p>
+        <p class="example-text" style="color:rgba(51,51,51,0.5);">"We'll take a look at your stuff and let you know what we think you should do to maybe improve things."</p>
+      </div>
+
+      <div class="example-card good">
+        <p class="example-label good">✓ Write Like This</p>
+        <p class="example-text">"Growth, engineered. Book your complimentary audit."</p>
+      </div>
+      <div class="example-card bad">
+        <p class="example-label bad">✗ Not Like This</p>
+        <p class="example-text" style="color:rgba(51,51,51,0.5);">"CLICK HERE NOW for your FREE consultation!! Don't miss out!!"</p>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3 class="sub-title">Channel-Specific Tone</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;">
+        <div style="border:1px solid var(--border);border-radius:4px;padding:1.8rem;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Cold Email</div>
+          <p style="font-size:0.85rem;line-height:1.7;color:var(--charcoal2);">Concise, personal, specific. Reference something real about their business. One clear ask. No attachments on first contact.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:4px;padding:1.8rem;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Proposals</div>
+          <p style="font-size:0.85rem;line-height:1.7;color:var(--charcoal2);">Elevated and thorough. Serif headlines, structured layout. Speak to outcomes not deliverables. Always ends with a clear next step.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:4px;padding:1.8rem;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Social Media</div>
+          <p style="font-size:0.85rem;line-height:1.7;color:var(--charcoal2);">Slightly warmer but never casual. Short, punchy captions. Insights and value-first. No emojis in excess — one maximum per post.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-divider"></div>
+
+  <!-- ══ 05 MOTION ══ -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">05</div>
+      <div class="chapter-info">
+        <p class="chapter-tag">Motion & Animation</p>
+        <h2 class="chapter-title">How the Brand<br/><em>Moves</em></h2>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <p class="note">Anova Co. moves with intention. Animation should feel like the brand — refined, deliberate, and never showy. Think of how a luxury hotel door opens: smooth, unhurried, perfectly balanced.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        <div style="border:1px solid var(--border);border-radius:4px;padding:2rem;background:white;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;">Easing</div>
+          <p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--green);margin-bottom:0.8rem;">Always ease-out or ease-in-out</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.7;">css: cubic-bezier(0.4, 0, 0.2, 1)<br/>Never linear, never bounce, never spring.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:4px;padding:2rem;background:white;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;">Duration</div>
+          <p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--green);margin-bottom:0.8rem;">400ms – 800ms for reveals</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.7;">Hover states: 200–250ms<br/>Page transitions: 600–800ms<br/>Never under 150ms or over 1000ms.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:4px;padding:2rem;background:white;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;">Scroll Reveals</div>
+          <p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--green);margin-bottom:0.8rem;">Fade up, slow fade</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.7;">Opacity 0→1 + translateY(20px)→0<br/>Stagger delays of 100–150ms between elements.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:4px;padding:2rem;background:white;">
+          <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;">Forbidden</div>
+          <p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--green);margin-bottom:0.8rem;">What we never do</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.7;">No flashing, no bouncing, no spinning logos, no parallax overuse, no auto-playing video with sound.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-divider"></div>
+
+  <!-- ══ 06 APPLICATIONS ══ -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">06</div>
+      <div class="chapter-info">
+        <p class="chapter-tag">Brand Applications</p>
+        <h2 class="chapter-title">The Brand<br/><em>In The World</em></h2>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3 class="sub-title">Applications</h3>
+      <div class="apps-grid">
+        <!-- Email signature -->
+        <div class="app-card">
+          <div class="app-preview" style="background:#fff;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;">
+            <div style="border-left:2px solid var(--gold);padding-left:1rem;">
+              <div style="font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.9rem;color:var(--green);letter-spacing:0.04em;">Ano Mutongo</div>
+              <div style="font-size:0.7rem;color:var(--muted);margin:0.15rem 0;letter-spacing:0.06em;text-transform:uppercase;">Founder</div>
+              <div style="font-size:0.7rem;color:var(--gold);letter-spacing:0.04em;">ano@anovaco.ca</div>
+              <div style="font-size:0.68rem;color:var(--muted);margin-top:0.1rem;">anovaco.ca</div>
+              <div style="margin-top:0.8rem;">
+                <svg width="16" height="16" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="5" fill="#1B2B21"/><path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/><rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="app-label">Email Signature</div>
+        </div>
+
+        <!-- Business card front -->
+        <div class="app-card">
+          <div class="app-preview" style="background:#1B2B21;flex-direction:column;align-items:flex-start;justify-content:space-between;">
+            <div>
+              <div style="font-family:'DM Sans',sans-serif;font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(212,175,55,0.5);margin-bottom:0.5rem;">Digital Growth Agency</div>
+              <div style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.9rem;letter-spacing:0.2em;text-transform:uppercase;color:#F4F1ED;">ANOVA <span style="color:var(--gold);">CO.</span></div>
+            </div>
+            <div>
+              <div style="font-size:0.62rem;color:rgba(244,241,237,0.35);font-family:'Playfair Display',serif;font-style:italic;">"Growth, engineered."</div>
+            </div>
+          </div>
+          <div class="app-label">Business Card — Front</div>
+        </div>
+
+        <!-- Business card back -->
+        <div class="app-card">
+          <div class="app-preview" style="background:#F4F1ED;flex-direction:column;align-items:flex-start;justify-content:center;gap:0.3rem;">
+            <div style="font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.88rem;color:#1B2B21;">Ano Mutongo</div>
+            <div style="font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">Founder, Anova Co.</div>
+            <div style="height:1px;width:30px;background:var(--gold);margin:0.4rem 0;"></div>
+            <div style="font-size:0.65rem;color:var(--gold);">ano@anovaco.ca</div>
+            <div style="font-size:0.65rem;color:var(--muted);">anovaco.ca</div>
+            <div style="font-size:0.65rem;color:var(--muted);">Toronto, Canada</div>
+          </div>
+          <div class="app-label">Business Card — Back</div>
+        </div>
+
+        <!-- Social avatar -->
+        <div class="app-card">
+          <div class="app-preview" style="background:#F4F1ED;">
+            <svg width="80" height="80" viewBox="0 0 40 40" fill="none">
+              <rect width="40" height="40" rx="20" fill="#1B2B21"/>
+              <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/>
+              <rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/>
+            </svg>
+          </div>
+          <div class="app-label">Social Media Avatar</div>
+        </div>
+
+        <!-- Proposal header -->
+        <div class="app-card">
+          <div class="app-preview" style="background:#1B2B21;flex-direction:column;justify-content:space-between;align-items:flex-start;">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <svg width="20" height="20" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="5" fill="rgba(244,241,237,0.08)"/><path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#F4F1ED"/><rect x="14" y="22" width="12" height="2" rx="1" fill="#D4AF37"/></svg>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(244,241,237,0.7);">ANOVA CO.</span>
+            </div>
+            <div>
+              <div style="font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;font-family:'DM Sans',sans-serif;">Growth Proposal</div>
+              <div style="font-family:'Playfair Display',serif;font-size:1rem;color:#F4F1ED;font-style:italic;">For [Client Name]</div>
+            </div>
+          </div>
+          <div class="app-label">Proposal Header</div>
+        </div>
+
+        <!-- Website hero preview -->
+        <div class="app-card">
+          <div class="app-preview" style="background:#1B2B21;flex-direction:column;align-items:flex-start;justify-content:center;gap:0.5rem;">
+            <div style="font-family:'DM Sans',sans-serif;font-size:0.45rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:0.5rem;"><span style="width:12px;height:0.5px;background:var(--gold);display:inline-block;"></span>AI-Powered Growth Agency</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1rem;color:#F4F1ED;line-height:1.1;">Growth,<br/><em style="color:var(--gold);">engineered.</em></div>
+            <div style="font-size:0.5rem;color:rgba(244,241,237,0.35);margin-top:0.2rem;">anovaco.ca</div>
+          </div>
+          <div class="app-label">Website Hero</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════
+     BACK COVER
+══════════════ -->
+<div class="back-cover">
+  <div class="bc-content">
+    <div style="margin-bottom:3rem;">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="5" fill="rgba(212,175,55,0.15)"/>
+        <rect x="0.5" y="0.5" width="39" height="39" rx="4.5" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <path d="M20 8 L32 30 H26.5 L20 18 L13.5 30 H8 Z" fill="#D4AF37" opacity="0.8"/>
+        <rect x="14" y="22" width="12" height="2" rx="1" fill="rgba(212,175,55,0.3)"/>
+      </svg>
+    </div>
+    <h2 class="bc-tagline">The standard is<br/>set. Now <em>grow.</em></h2>
+  </div>
+  <div class="bc-bottom">
+    <div class="bc-contact">
+      <p>Anova Co. — Toronto, Canada</p>
+      <p><a href="mailto:ano@anovaco.ca">ano@anovaco.ca</a></p>
+      <p><a href="https://anovaco.ca">anovaco.ca</a></p>
+    </div>
+    <p style="font-size:0.65rem;color:rgba(244,241,237,0.2);text-align:right;letter-spacing:0.1em;">BRAND GUIDELINES v1.0<br/>© 2025 ANOVA CO.<br/>ALL RIGHTS RESERVED</p>
+  </div>
+</div>
+
+</body>
+</html>
