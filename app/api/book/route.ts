@@ -109,7 +109,7 @@ async function createCalendarEvent(p: Payload): Promise<{ meetLink: string; even
     const res = await calendar.events.insert({
       calendarId,
       conferenceDataVersion: 1,
-      sendUpdates: "all",
+      sendUpdates: "none",
       requestBody: {
         summary: `Anova Co. Audit — ${p.business_name}`,
         description: descLines.join("\n"),
