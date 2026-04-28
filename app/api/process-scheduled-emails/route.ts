@@ -44,6 +44,7 @@ async function handle() {
       date: booking.date,
       time: booking.time,
       meetLink: booking.meetLink,
+      bookingDateTime: booking.bookingDateTime,
     };
     const { subject, html } = render(emailType, data);
     try {

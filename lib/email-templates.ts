@@ -17,8 +17,26 @@ export type EmailData = {
   date: string;             // "Monday, June 2 2025"
   time: string;             // "10:00 AM"
   meetLink: string;
-  calendarLink?: string;    // .ics or Google Calendar add-link
+  bookingDateTime: string;  // ISO timestamp of the call start, e.g. "2026-05-22T14:00:00.000Z"
 };
+
+// Build a Google Calendar "render?action=TEMPLATE" URL the client can open to
+// pre-fill an event. Times must be UTC YYYYMMDDTHHMMSSZ.
+function buildGoogleCalendarUrl(bookingDateTime: string, meetLink: string): string {
+  const start = bookingDateTime.replace(/-|:|\.\d{3}/g, "");
+  const endDate = new Date(new Date(bookingDateTime).getTime() + 30 * 60 * 1000);
+  const end = endDate.toISOString().replace(/-|:|\.\d{3}/g, "");
+  return (
+    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text=Anova+Co.+Growth+Audit" +
+    `&dates=${start}/${end}` +
+    "&details=" +
+    encodeURIComponent(
+      `Your complimentary 30-minute business growth audit with Anova Co.\n\nJoin here: ${meetLink}`,
+    ) +
+    `&location=${encodeURIComponent(meetLink)}`
+  );
+}
 
 export type RenderedEmail = { subject: string; html: string };
 
@@ -78,13 +96,18 @@ const goldDivider = `
   <tr><td style="width:40px;height:2px;background:${GOLD};font-size:0;line-height:0;">&nbsp;</td></tr>
 </table>`;
 
-const ctaButton = (label: string, href: string, opts: { ghost?: boolean; large?: boolean } = {}) => {
+const ctaButton = (
+  label: string,
+  href: string,
+  opts: { ghost?: boolean; large?: boolean; newTab?: boolean } = {},
+) => {
   const padding = opts.large ? "16px 36px" : "14px 32px";
   const fontSize = opts.large ? "14px" : "13px";
+  const target = opts.newTab ? ' target="_blank" rel="noopener noreferrer"' : "";
   if (opts.ghost) {
-    return `<a href="${href}" style="display:inline-block;background:transparent;color:${GOLD};border:1px solid ${GOLD};padding:${padding};border-radius:4px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:${fontSize};letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;">${label}</a>`;
+    return `<a href="${href}"${target} style="display:inline-block;background:transparent;color:${GOLD};border:1px solid ${GOLD};padding:${padding};border-radius:4px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:${fontSize};letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;">${label}</a>`;
   }
-  return `<a href="${href}" style="display:inline-block;background:${FOREST};color:${CANVAS};padding:${padding};border-radius:4px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:${fontSize};letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;">${label}</a>`;
+  return `<a href="${href}"${target} style="display:inline-block;background:${FOREST};color:${CANVAS};padding:${padding};border-radius:4px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:${fontSize};letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;">${label}</a>`;
 };
 
 const detailRow = (label: string, value: string, isLink = false) => `
@@ -164,7 +187,7 @@ const shell = (title: string, bodyInner: string) => `<!doctype html>
 
 export function getConfirmationEmail(data: EmailData): RenderedEmail {
   const subject = `Your Anova Co. audit is confirmed — ${data.date} at ${data.time}`;
-  const calendarHref = data.calendarLink || data.meetLink;
+  const calendarHref = buildGoogleCalendarUrl(data.bookingDateTime, data.meetLink);
 
   const body = `
 ${goldDivider}
@@ -196,7 +219,7 @@ ${goldDivider}
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
     <td align="center" style="padding:8px 0 16px;">
-      ${ctaButton("Add to Calendar", calendarHref)}
+      ${ctaButton("Add to Google Calendar &rarr;", calendarHref, { newTab: true })}
     </td>
   </tr>
   <tr>

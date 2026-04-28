@@ -16,7 +16,7 @@ const sample: EmailData = {
   date: "Monday, June 2 2025",
   time: "10:00 AM",
   meetLink: "https://meet.google.com/abc-defg-hij",
-  calendarLink: "https://calendar.google.com/calendar/u/0/r/eventedit",
+  bookingDateTime: "2025-06-02T14:00:00.000Z",
 };
 
 const renderers: Record<string, () => RenderedEmail> = {

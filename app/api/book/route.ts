@@ -78,6 +78,7 @@ async function createCalendarEvent(p: Payload): Promise<{ meetLink: string; even
       email: clientEmail,
       key: privateKey.replace(/\\n/g, "\n"),
       scopes: ["https://www.googleapis.com/auth/calendar"],
+      subject: "ano@anovaco.ca",
     });
     const calendar = google.calendar({ version: "v3", auth });
 
@@ -277,12 +278,15 @@ async function sendEmails(
 
   // Client confirmation — branded template
   try {
+    const startLocal = toLocalISOForDay(p.date, p.time);
+    const bookingDateTime = new Date(startLocal).toISOString();
     const { subject, html } = getConfirmationEmail({
       clientName: firstName(p.name),
       businessName: p.business_name,
       date: humanDate,
       time: humanTime,
       meetLink,
+      bookingDateTime,
     });
     await resend.emails.send({ from: FROM, to: p.email, subject, html });
   } catch (err) {
