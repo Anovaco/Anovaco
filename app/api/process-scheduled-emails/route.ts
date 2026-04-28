@@ -34,7 +34,7 @@ async function handle() {
   }
   const resend = new Resend(apiKey);
 
-  const due = getPendingEmails();
+  const due = await getPendingEmails();
   const results: { id: string; type: EmailType; ok: boolean; error?: string }[] = [];
 
   for (const { booking, emailType } of due) {
@@ -58,7 +58,7 @@ async function handle() {
         results.push({ id: booking.id, type: emailType, ok: false, error: String(error) });
         continue;
       }
-      markEmailSent(booking.id, emailType);
+      await markEmailSent(booking.id, emailType);
       results.push({ id: booking.id, type: emailType, ok: true });
     } catch (err) {
       results.push({

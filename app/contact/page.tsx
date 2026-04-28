@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { format, addMonths, isBefore, startOfDay } from "date-fns";
+import { format, addMonths, startOfDay } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { AnovaLogo } from "@/components/anova-logo";
 import { PageTransition } from "@/components/page-transition";

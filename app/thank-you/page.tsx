@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { AnovaLogo } from "@/components/anova-logo";
@@ -151,6 +151,14 @@ function buildGoogleCalendarUrl(parts: TimeParts, meetLink: string): string {
 }
 
 export default function ThankYouPage() {
+  return (
+    <Suspense fallback={null}>
+      <ThankYouContent />
+    </Suspense>
+  );
+}
+
+function ThankYouContent() {
   const params = useSearchParams();
   const [booking, setBooking] = useState<Booking | null>(null);
 
