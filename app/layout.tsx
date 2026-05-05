@@ -23,29 +23,29 @@ const OG_DESCRIPTION =
   "AI-powered digital growth agency in Toronto. Custom AI Systems, websites, SEO, ads, and reputation management for local businesses.";
 
 export const metadata: Metadata = {
-  title: "Anova Co. — Growth, engineered.",
+  title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
   description: OG_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "Anova Co. — Growth, engineered.",
+    title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
     description: OG_DESCRIPTION,
     url: SITE_URL,
     siteName: "Anova Co.",
     type: "website",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Anova Co. — Growth, engineered.",
+        alt: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anova Co. — Growth, engineered.",
+    title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
     description: OG_DESCRIPTION,
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
 };
 
