@@ -1889,26 +1889,6 @@ section { position: relative; }
   .section-label { display: block; }
 }
 
-.mobile-cta-bar {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  height: 64px;
-  background: #1B2B21;
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-  z-index: 400;
-  display: none;
-  align-items: center; justify-content: center;
-  padding: 0 16px;
-}
-.mobile-cta-btn {
-  width: 100%; max-width: 320px;
-  justify-content: center;
-  padding: 12px 20px !important;
-}
-@media (max-width: 768px) {
-  .mobile-cta-bar { display: flex; }
-  body { padding-bottom: 64px; }
-}
-
 /* ═══════════════════════════════════════════════════════════════
    TRUST BAR
 ═══════════════════════════════════════════════════════════════ */
