@@ -5,6 +5,7 @@ import { randomUUID } from "crypto";
 import { format } from "date-fns";
 import { addBooking, type Booking } from "@/lib/bookings-store";
 import { getConfirmationEmail } from "@/lib/email-templates";
+import { isSlotTaken } from "@/lib/google-calendar";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -271,6 +272,30 @@ export async function POST(req: Request) {
   const dayDate = new Date(payload.date);
   const humanDate = format(dayDate, "EEEE, MMMM d, yyyy");
   const humanTime = formatTime12(payload.time);
+
+  // Pre-flight: block double-bookings. Google Calendar is the source of truth
+  // (catches manually-added events too), checked via freebusy.
+  try {
+    const [hh, mm] = payload.time.split(":").map(Number);
+    const taken = await isSlotTaken(
+      dayDate.getFullYear(),
+      dayDate.getMonth() + 1,
+      dayDate.getDate(),
+      hh,
+      mm,
+    );
+    if (taken) {
+      return NextResponse.json(
+        { success: false, error: "This time slot was just booked by someone else." },
+        { status: 400 },
+      );
+    }
+  } catch (err) {
+    // Fail-open: if freebusy is unreachable, fall through and let the calendar
+    // insert proceed. The risk of a rare double-book here is preferable to a
+    // hard-fail that blocks all bookings whenever Google has an outage.
+    console.error("[book] freebusy preflight failed — proceeding:", err);
+  }
 
   // Calendar (non-blocking on failure)
   const calResult = await createCalendarEvent(payload);

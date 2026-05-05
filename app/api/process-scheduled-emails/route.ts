@@ -24,7 +24,12 @@ function render(emailType: EmailType, data: EmailData): RenderedEmail {
   return getFollowUpEmail(data);
 }
 
-async function handle() {
+async function handle(req: Request) {
+  const secret = req.headers.get("x-cron-secret");
+  if (secret !== process.env.CRON_SECRET) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
@@ -74,5 +79,5 @@ async function handle() {
 }
 
 // Vercel Cron uses GET. Allow POST too for manual testing via curl.
-export const GET = handle;
-export const POST = handle;
+export const GET = (req: Request) => handle(req);
+export const POST = (req: Request) => handle(req);

@@ -1091,6 +1091,22 @@ section { position: relative; }
   background: var(--green); color: var(--canvas); border-color: var(--green);
 }
 .time-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(27, 43, 33, 0.12); }
+.time-btn.is-booked {
+  background: rgba(27, 43, 33, 0.04); color: var(--muted);
+  border-color: var(--rule); cursor: not-allowed;
+  text-decoration: line-through; text-decoration-color: rgba(27, 43, 33, 0.35);
+  position: relative;
+}
+.time-btn.is-booked:hover { background: rgba(27, 43, 33, 0.04); border-color: var(--rule); color: var(--muted); }
+.time-btn-tag {
+  display: inline-block; margin-left: 8px;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+}
+.time-loading {
+  font-size: 12px; color: var(--muted); padding: 8px 4px 0;
+  letter-spacing: 0.04em;
+}
 
 .booking-summary {
   margin-top: 28px; padding: 20px 24px;

@@ -756,6 +756,42 @@ function Step5({
   const toMonth = useMemo(() => addMonths(today, 6), [today]);
   const slots = useMemo(() => slotsForDate(form.date), [form.date]);
 
+  // Booked slots for the selected date — fetched from /api/availability,
+  // which queries Google Calendar freebusy as the source of truth.
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+  const [availLoading, setAvailLoading] = useState(false);
+
+  useEffect(() => {
+    if (!form.date) {
+      setBookedSlots([]);
+      return;
+    }
+    const y = form.date.getFullYear();
+    const mo = String(form.date.getMonth() + 1).padStart(2, "0");
+    const d = String(form.date.getDate()).padStart(2, "0");
+    const dateStr = `${y}-${mo}-${d}`;
+    const ctrl = new AbortController();
+    setAvailLoading(true);
+    fetch(`/api/availability?date=${dateStr}`, { signal: ctrl.signal, cache: "no-store" })
+      .then((r) => r.json())
+      .then((data: { bookedSlots?: string[] }) => {
+        setBookedSlots(Array.isArray(data.bookedSlots) ? data.bookedSlots : []);
+      })
+      .catch((err) => {
+        if (err?.name !== "AbortError") setBookedSlots([]);
+      })
+      .finally(() => setAvailLoading(false));
+    return () => ctrl.abort();
+  }, [form.date]);
+
+  // If the currently-selected time becomes booked (date changed, or another
+  // user just took it), clear it so the form can't submit a stale slot.
+  useEffect(() => {
+    if (form.time && bookedSlots.includes(form.time)) {
+      set("time", "");
+    }
+  }, [bookedSlots, form.time, set]);
+
   const selectedLabel =
     form.date && form.time
       ? `${format(form.date, "EEEE, MMMM d")} at ${formatTime12(form.time)}`
@@ -800,18 +836,28 @@ function Step5({
           ) : slots.length === 0 ? (
             <div className="time-empty">No availability on this day — please choose another.</div>
           ) : (
-            <div className="time-list">
-              {slots.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  className={`time-btn ${form.time === t ? "selected" : ""}`}
-                  onClick={() => set("time", t)}
-                >
-                  {formatTime12(t)}
-                </button>
-              ))}
-            </div>
+            <>
+              <div className="time-list">
+                {slots.map((t) => {
+                  const isBooked = bookedSlots.includes(t);
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      className={`time-btn ${form.time === t ? "selected" : ""} ${isBooked ? "is-booked" : ""}`}
+                      onClick={() => !isBooked && set("time", t)}
+                      disabled={isBooked}
+                      aria-disabled={isBooked}
+                      title={isBooked ? "Already booked" : undefined}
+                    >
+                      {formatTime12(t)}
+                      {isBooked && <span className="time-btn-tag">Booked</span>}
+                    </button>
+                  );
+                })}
+              </div>
+              {availLoading && <div className="time-loading">Checking availability…</div>}
+            </>
           )}
         </div>
       </div>
