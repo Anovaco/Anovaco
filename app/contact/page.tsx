@@ -103,12 +103,32 @@ function formatTime12(t: string): string {
 
 /* ───────── Page ───────── */
 
+type Step1FieldKey =
+  | "name"
+  | "email"
+  | "business_name"
+  | "industry"
+  | "city"
+  | "role"
+  | "phone";
+
+const STEP1_ORDER: Step1FieldKey[] = [
+  "name",
+  "email",
+  "business_name",
+  "industry",
+  "city",
+  "role",
+  "phone",
+];
+
 export default function ContactPage() {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(initialState);
   const [current, setCurrent] = useState(0);
   const [maxReached, setMaxReached] = useState(0);
   const [errors, setErrors] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<Step1FieldKey, string>>>({});
   const [submitError, setSubmitError] = useState("");
   const [isPending, startTransition] = useTransition();
   const [draftSaved, setDraftSaved] = useState(false);
@@ -158,6 +178,12 @@ export default function ContactPage() {
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => {
     setForm((f) => ({ ...f, [k]: v }));
     setErrors([]);
+    setFieldErrors((fe) => {
+      if (!(k in fe)) return fe;
+      const next = { ...fe };
+      delete next[k as Step1FieldKey];
+      return next;
+    });
   };
   const toggleInterest = (val: string) => {
     setForm((f) => ({
@@ -170,18 +196,42 @@ export default function ContactPage() {
   };
 
   /* ───────── Validation ───────── */
+  const validateStep1Fields = (): Partial<Record<Step1FieldKey, string>> => {
+    const e: Partial<Record<Step1FieldKey, string>> = {};
+    const name = form.name.trim();
+    if (!name) e.name = "Please enter your name";
+    else if (name.length < 2) e.name = "Name must be at least 2 characters";
+
+    const email = form.email.trim();
+    if (!email) e.email = "Please enter your email address";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      e.email = "Please enter a valid email address";
+
+    const bn = form.business_name.trim();
+    if (!bn) e.business_name = "Please enter your business name";
+    else if (bn.length < 2) e.business_name = "Business name must be at least 2 characters";
+
+    if (!form.industry) e.industry = "Please select your industry";
+
+    const city = form.city.trim();
+    if (!city) e.city = "Please enter your city or neighbourhood";
+    else if (city.length < 2) e.city = "Must be at least 2 characters";
+
+    if (!form.role) e.role = "Please select your role";
+
+    const phone = form.phone.trim();
+    if (!phone) e.phone = "Please enter your phone number";
+    else if (!/^[\d\s\-()+]{7,}$/.test(phone))
+      e.phone = "Please enter a valid phone number";
+
+    return e;
+  };
+
   const validateStep = (idx: number): string[] => {
     const missing: string[] = [];
     if (idx === 0) {
-      if (!form.name.trim()) missing.push("Your name");
-      if (!form.email.trim()) missing.push("Email address");
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-        missing.push("Email address (valid format)");
-      if (!form.business_name.trim()) missing.push("Business name");
-      if (!form.industry) missing.push("Industry");
-      if (!form.city.trim()) missing.push("City / Neighbourhood");
-      if (!form.role) missing.push("Your role");
-      if (!form.phone.trim()) missing.push("Phone number");
+      const fe = validateStep1Fields();
+      for (const k of STEP1_ORDER) if (fe[k]) missing.push(fe[k]!);
     } else if (idx === 1) {
       if (form.interests.length === 0) missing.push("At least one service");
       if (!form.referral) missing.push("How you heard about us");
@@ -198,6 +248,15 @@ export default function ContactPage() {
     if (target < 0 || target > TOTAL_STEPS - 1) return;
     if (target > current) {
       for (let i = current; i < target; i++) {
+        if (i === 0) {
+          const fe = validateStep1Fields();
+          if (Object.keys(fe).length > 0) {
+            setCurrent(0);
+            setFieldErrors(fe);
+            setErrors([]);
+            return;
+          }
+        }
         const miss = validateStep(i);
         if (miss.length) {
           setCurrent(i);
@@ -211,6 +270,32 @@ export default function ContactPage() {
     setErrors([]);
   };
   const goNext = () => {
+    if (current === 0) {
+      const fe = validateStep1Fields();
+      if (Object.keys(fe).length > 0) {
+        setFieldErrors(fe);
+        setErrors([]);
+        if (typeof window !== "undefined") {
+          const firstKey = STEP1_ORDER.find((k) => fe[k]);
+          if (firstKey) {
+            requestAnimationFrame(() => {
+              const el = document.querySelector(
+                `[data-field="${firstKey}"]`,
+              ) as HTMLElement | null;
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+                const focusable = el.querySelector(
+                  "input, select, textarea",
+                ) as HTMLElement | null;
+                if (focusable) focusable.focus({ preventScroll: true });
+              }
+            });
+          }
+        }
+        return;
+      }
+      setFieldErrors({});
+    }
     const miss = validateStep(current);
     if (miss.length) {
       setErrors(miss);
@@ -423,7 +508,9 @@ export default function ContactPage() {
 
           {/* Step panels */}
           <div className="msf-steps">
-            {current === 0 && <Step1 form={form} set={set} errors={errors} />}
+            {current === 0 && (
+              <Step1 form={form} set={set} fieldErrors={fieldErrors} />
+            )}
             {current === 1 && (
               <Step2
                 form={form}
@@ -492,13 +579,12 @@ export default function ContactPage() {
 function Step1({
   form,
   set,
-  errors,
+  fieldErrors,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
-  errors: string[];
+  fieldErrors: Partial<Record<Step1FieldKey, string>>;
 }) {
-  const emailErr = errors.includes("Email address") || errors.includes("Email address (valid format)");
   return (
     <section className="msf-step animate-[msfIn_420ms_cubic-bezier(0.4,0,0.2,1)_both]">
       <div className="msf-step-head">
@@ -513,17 +599,29 @@ function Step1({
         </div>
       </div>
       <div className="form-row">
-        <Field label="Your name" required kind="text" errored={errors.includes("Your name")}>
+        <Field
+          label="Your name"
+          required
+          kind="text"
+          error={fieldErrors.name}
+          fieldName="name"
+        >
           <input
-            className="input"
+            className={`input${fieldErrors.name ? " border-red-500" : ""}`}
             placeholder=" "
             value={form.name}
             onChange={(e) => set("name", e.target.value)}
           />
         </Field>
-        <Field label="Email address" required kind="text" errored={emailErr}>
+        <Field
+          label="Email address"
+          required
+          kind="text"
+          error={fieldErrors.email}
+          fieldName="email"
+        >
           <input
-            className="input"
+            className={`input${fieldErrors.email ? " border-red-500" : ""}`}
             type="email"
             placeholder=" "
             value={form.email}
@@ -532,17 +630,28 @@ function Step1({
         </Field>
       </div>
       <div className="form-row">
-        <Field label="Business name" required kind="text" errored={errors.includes("Business name")}>
+        <Field
+          label="Business name"
+          required
+          kind="text"
+          error={fieldErrors.business_name}
+          fieldName="business_name"
+        >
           <input
-            className="input"
+            className={`input${fieldErrors.business_name ? " border-red-500" : ""}`}
             placeholder=" "
             value={form.business_name}
             onChange={(e) => set("business_name", e.target.value)}
           />
         </Field>
-        <Field label="Industry" required errored={errors.includes("Industry")}>
+        <Field
+          label="Industry"
+          required
+          error={fieldErrors.industry}
+          fieldName="industry"
+        >
           <select
-            className="select"
+            className={`select${fieldErrors.industry ? " border-red-500" : ""}`}
             value={form.industry}
             onChange={(e) => set("industry", e.target.value)}
           >
@@ -556,17 +665,28 @@ function Step1({
         </Field>
       </div>
       <div className="form-row">
-        <Field label="City / Neighbourhood" required kind="text" errored={errors.includes("City / Neighbourhood")}>
+        <Field
+          label="City / Neighbourhood"
+          required
+          kind="text"
+          error={fieldErrors.city}
+          fieldName="city"
+        >
           <input
-            className="input"
+            className={`input${fieldErrors.city ? " border-red-500" : ""}`}
             placeholder=" "
             value={form.city}
             onChange={(e) => set("city", e.target.value)}
           />
         </Field>
-        <Field label="Your role" required errored={errors.includes("Your role")}>
+        <Field
+          label="Your role"
+          required
+          error={fieldErrors.role}
+          fieldName="role"
+        >
           <select
-            className="select"
+            className={`select${fieldErrors.role ? " border-red-500" : ""}`}
             value={form.role}
             onChange={(e) => set("role", e.target.value)}
           >
@@ -579,16 +699,36 @@ function Step1({
           </select>
         </Field>
       </div>
-      <div className="form-row" style={{ gridTemplateColumns: "1fr" }}>
-        <Field label="Phone number" required kind="text" errored={errors.includes("Phone number")}>
+      <div
+        className="form-row"
+        style={{ gridTemplateColumns: "1fr 1fr", alignItems: "start" }}
+      >
+        <Field
+          label="Phone number"
+          required
+          kind="text"
+          error={fieldErrors.phone}
+          fieldName="phone"
+        >
           <input
-            className="input"
+            className={`input${fieldErrors.phone ? " border-red-500" : ""}`}
             type="tel"
             placeholder=" "
             value={form.phone}
             onChange={(e) => set("phone", e.target.value)}
           />
         </Field>
+        <p
+          style={{
+            alignSelf: "center",
+            fontSize: 12,
+            color: "var(--muted)",
+            lineHeight: 1.5,
+            margin: 0,
+          }}
+        >
+          We&apos;ll never share your number.
+        </p>
       </div>
     </section>
   );
@@ -618,16 +758,6 @@ function Step2({
           </p>
         </div>
       </div>
-      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginBottom: 22 }}>
-        <Field label="Biggest challenge" optional kind="text">
-          <textarea
-            className="textarea"
-            placeholder=" "
-            value={form.challenge}
-            onChange={(e) => set("challenge", e.target.value)}
-          />
-        </Field>
-      </div>
       <div className="check-grid">
         {INTERESTS.map((v) => {
           const checked = form.interests.includes(v);
@@ -649,7 +779,17 @@ function Step2({
           );
         })}
       </div>
-      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginTop: 22 }}>
+      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginTop: 22, marginBottom: 22 }}>
+        <Field label="Biggest challenge" optional kind="text">
+          <textarea
+            className="textarea"
+            placeholder=" "
+            value={form.challenge}
+            onChange={(e) => set("challenge", e.target.value)}
+          />
+        </Field>
+      </div>
+      <div className="form-row" style={{ gridTemplateColumns: "1fr" }}>
         <Field label="How did you hear about Anova Co.?" required errored={errors.includes("How you heard about us")}>
           <select
             className="select"
@@ -704,6 +844,15 @@ function Step3({
   const today = useMemo(() => startOfDay(new Date()), []);
   const toMonth = useMemo(() => addMonths(today, 6), [today]);
   const slots = useMemo(() => slotsForDate(form.date), [form.date]);
+
+  const isTodayLocal = useMemo(() => {
+    const t = new Date();
+    const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+    return (date: Date) => {
+      const cellStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      return todayStr === cellStr;
+    };
+  }, []);
 
   // Booked slots for the selected date — fetched from /api/availability,
   // which queries Google Calendar freebusy as the source of truth.
@@ -774,6 +923,8 @@ function Step3({
           startMonth={today}
           endMonth={toMonth}
           weekStartsOn={1}
+          today={today}
+          modifiers={{ today: isTodayLocal }}
         />
 
         <div className="time-panel">
@@ -829,6 +980,8 @@ function Field({
   optional,
   kind = "select",
   errored,
+  error,
+  fieldName,
   children,
 }: {
   label: string;
@@ -836,11 +989,30 @@ function Field({
   optional?: boolean;
   kind?: "select" | "text";
   errored?: boolean;
+  error?: string;
+  fieldName?: string;
   children: React.ReactNode;
 }) {
+  const isInvalid = !!error || errored;
+  const errorNode = error ? (
+    <p
+      className="field-error"
+      style={{
+        color: "#ef4444",
+        fontSize: 12,
+        lineHeight: 1.4,
+        margin: "6px 0 0",
+      }}
+    >
+      {error}
+    </p>
+  ) : null;
   if (kind === "text") {
     return (
-      <div className={`form-field float-field${errored ? " is-invalid" : ""}`}>
+      <div
+        data-field={fieldName}
+        className={`form-field float-field${isInvalid ? " is-invalid" : ""}`}
+      >
         {children}
         <label className="float-label">
           {label}{" "}
@@ -854,17 +1026,22 @@ function Field({
             <circle cx="8" cy="11.5" r="0.9" fill="currentColor" />
           </svg>
         </span>
+        {errorNode}
       </div>
     );
   }
   return (
-    <div className={`form-field${errored ? " is-invalid" : ""}`}>
+    <div
+      data-field={fieldName}
+      className={`form-field${isInvalid ? " is-invalid" : ""}`}
+    >
       <label className="form-label">
         {label}{" "}
         {required && <span className="req">*</span>}
         {optional && <span className="opt">— optional</span>}
       </label>
       {children}
+      {errorNode}
     </div>
   );
 }

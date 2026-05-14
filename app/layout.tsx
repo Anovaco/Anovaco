@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { CustomCursor } from "@/components/custom-cursor";
 import { Analytics } from "@vercel/analytics/next";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { FloatingCTA } from "@/components/floating-cta";
@@ -91,7 +90,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProgress />
         {children}
         <FloatingCTA />
-        <CustomCursor />
         <Analytics />
       </body>
     </html>

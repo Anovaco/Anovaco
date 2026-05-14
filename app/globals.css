@@ -1782,46 +1782,6 @@ section { position: relative; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   CUSTOM CURSOR
-═══════════════════════════════════════════════════════════════ */
-@media (hover: hover) and (pointer: fine) {
-  body.has-custom-cursor,
-  body.has-custom-cursor * {
-    cursor: none !important;
-  }
-}
-.cursor-dot,
-.cursor-ring {
-  position: fixed; top: 0; left: 0;
-  pointer-events: none;
-  border-radius: 50%;
-  display: none;
-}
-@media (hover: hover) and (pointer: fine) {
-  body.has-custom-cursor .cursor-dot,
-  body.has-custom-cursor .cursor-ring {
-    display: block;
-  }
-}
-.cursor-dot {
-  width: 8px; height: 8px;
-  background: #D4AF37;
-  z-index: 9999;
-  transition: transform 200ms ease, opacity 200ms ease;
-}
-.cursor-dot.is-hover { transform: translate3d(0, 0, 0) translate(-50%, -50%) scale(1.5); }
-.cursor-ring {
-  width: 32px; height: 32px;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  z-index: 9998;
-  transition: transform 200ms ease, border-color 200ms ease, opacity 200ms ease;
-}
-.cursor-ring.is-hover {
-  transform: translate3d(0, 0, 0) translate(-50%, -50%) scale(1.8);
-  border-color: rgba(212, 175, 55, 1);
-}
-
-/* ═══════════════════════════════════════════════════════════════
    SCROLL PROGRESS + FLOATING CTA + SECTION LABELS + MOBILE CTA
 ═══════════════════════════════════════════════════════════════ */
 .scroll-progress {
