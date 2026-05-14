@@ -52,9 +52,41 @@ export const metadata: Metadata = {
   },
 };
 
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "Anova Co.",
+  description:
+    "AI-powered digital growth agency helping local service businesses grow through AI automation, web design, Google & Meta Ads, SEO, social media management, and reputation management.",
+  url: "https://anovaco.ca",
+  email: "ano@anovaco.ca",
+  areaServed: {
+    "@type": "City",
+    name: "Toronto",
+    addressRegion: "ON",
+    addressCountry: "CA",
+  },
+  serviceType: [
+    "AI Automation",
+    "Website Design",
+    "Google Ads",
+    "Meta Ads",
+    "Local SEO",
+    "Social Media Management",
+    "Reputation Management",
+  ],
+  priceRange: "$$",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${playfair.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        />
+      </head>
       <body>
         <ScrollProgress />
         {children}

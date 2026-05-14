@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import {
   getConfirmationEmail,
   getReminderEmail24h,
@@ -27,6 +28,9 @@ const renderers: Record<string, () => RenderedEmail> = {
 };
 
 export async function GET(req: Request) {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
   const url = new URL(req.url);
   const type = url.searchParams.get("type") || "confirmation";
   const fn = renderers[type];

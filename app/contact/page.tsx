@@ -74,15 +74,9 @@ const REFERRAL_SOURCES = [
   "Other",
 ];
 
-const STEP_TITLES = [
-  "About your business",
-  "Your contact info",
-  "Your interests",
-  "A bit more context",
-  "Pick your time",
-];
-const STEP_LABELS = ["Business", "Contact", "Interests", "Context", "Time"];
-const TOTAL_STEPS = 5;
+const STEP_TITLES = ["About you", "Your goals", "Pick a time"];
+const STEP_LABELS = ["About You", "Your Goals", "Pick a Time"];
+const TOTAL_STEPS = 3;
 
 /* ───────── Time slots ───────── */
 
@@ -179,23 +173,21 @@ export default function ContactPage() {
   const validateStep = (idx: number): string[] => {
     const missing: string[] = [];
     if (idx === 0) {
-      if (!form.business_name.trim()) missing.push("Business name");
-      if (!form.city.trim()) missing.push("City / Neighbourhood");
-      if (!form.industry) missing.push("Industry");
-    } else if (idx === 1) {
       if (!form.name.trim()) missing.push("Your name");
-      if (!form.role) missing.push("Your role");
       if (!form.email.trim()) missing.push("Email address");
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
         missing.push("Email address (valid format)");
+      if (!form.business_name.trim()) missing.push("Business name");
+      if (!form.industry) missing.push("Industry");
+      if (!form.city.trim()) missing.push("City / Neighbourhood");
+      if (!form.role) missing.push("Your role");
       if (!form.phone.trim()) missing.push("Phone number");
-    } else if (idx === 2) {
+    } else if (idx === 1) {
       if (form.interests.length === 0) missing.push("At least one service");
-    } else if (idx === 3) {
       if (!form.referral) missing.push("How you heard about us");
       if (form.referral === "Other" && !form.referral_other.trim())
         missing.push("Please tell us where");
-    } else if (idx === 4) {
+    } else if (idx === 2) {
       if (!form.date) missing.push("A date");
       if (!form.time) missing.push("A time");
     }
@@ -432,10 +424,15 @@ export default function ContactPage() {
           {/* Step panels */}
           <div className="msf-steps">
             {current === 0 && <Step1 form={form} set={set} errors={errors} />}
-            {current === 1 && <Step2 form={form} set={set} errors={errors} />}
-            {current === 2 && <Step3 form={form} toggleInterest={toggleInterest} />}
-            {current === 3 && <Step4 form={form} set={set} errors={errors} />}
-            {current === 4 && <Step5 form={form} set={set} />}
+            {current === 1 && (
+              <Step2
+                form={form}
+                set={set}
+                toggleInterest={toggleInterest}
+                errors={errors}
+              />
+            )}
+            {current === 2 && <Step3 form={form} set={set} />}
           </div>
 
           {/* Errors */}
@@ -501,18 +498,38 @@ function Step1({
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
   errors: string[];
 }) {
+  const emailErr = errors.includes("Email address") || errors.includes("Email address (valid format)");
   return (
     <section className="msf-step animate-[msfIn_420ms_cubic-bezier(0.4,0,0.2,1)_both]">
       <div className="msf-step-head">
         <span className="msf-step-num">01</span>
         <div>
           <h3 className="msf-step-title">
-            About your <em>business.</em>
+            About <em>you.</em>
           </h3>
           <p className="msf-step-sub">
-            A few details about who you are and where you operate.
+            Tell us who you are and where your business operates.
           </p>
         </div>
+      </div>
+      <div className="form-row">
+        <Field label="Your name" required kind="text" errored={errors.includes("Your name")}>
+          <input
+            className="input"
+            placeholder=" "
+            value={form.name}
+            onChange={(e) => set("name", e.target.value)}
+          />
+        </Field>
+        <Field label="Email address" required kind="text" errored={emailErr}>
+          <input
+            className="input"
+            type="email"
+            placeholder=" "
+            value={form.email}
+            onChange={(e) => set("email", e.target.value)}
+          />
+        </Field>
       </div>
       <div className="form-row">
         <Field label="Business name" required kind="text" errored={errors.includes("Business name")}>
@@ -523,16 +540,6 @@ function Step1({
             onChange={(e) => set("business_name", e.target.value)}
           />
         </Field>
-        <Field label="City / Neighbourhood" required kind="text" errored={errors.includes("City / Neighbourhood")}>
-          <input
-            className="input"
-            placeholder=" "
-            value={form.city}
-            onChange={(e) => set("city", e.target.value)}
-          />
-        </Field>
-      </div>
-      <div className="form-row" style={{ gridTemplateColumns: "1fr" }}>
         <Field label="Industry" required errored={errors.includes("Industry")}>
           <select
             className="select"
@@ -548,40 +555,13 @@ function Step1({
           </select>
         </Field>
       </div>
-    </section>
-  );
-}
-
-function Step2({
-  form,
-  set,
-  errors,
-}: {
-  form: FormState;
-  set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
-  errors: string[];
-}) {
-  const emailErr = errors.includes("Email address") || errors.includes("Email address (valid format)");
-  return (
-    <section className="msf-step animate-[msfIn_420ms_cubic-bezier(0.4,0,0.2,1)_both]">
-      <div className="msf-step-head">
-        <span className="msf-step-num">02</span>
-        <div>
-          <h3 className="msf-step-title">
-            Your <em>contact info.</em>
-          </h3>
-          <p className="msf-step-sub">
-            Where we&apos;ll send the audit and confirm your strategy call.
-          </p>
-        </div>
-      </div>
       <div className="form-row">
-        <Field label="Your name" required kind="text" errored={errors.includes("Your name")}>
+        <Field label="City / Neighbourhood" required kind="text" errored={errors.includes("City / Neighbourhood")}>
           <input
             className="input"
             placeholder=" "
-            value={form.name}
-            onChange={(e) => set("name", e.target.value)}
+            value={form.city}
+            onChange={(e) => set("city", e.target.value)}
           />
         </Field>
         <Field label="Your role" required errored={errors.includes("Your role")}>
@@ -599,16 +579,7 @@ function Step2({
           </select>
         </Field>
       </div>
-      <div className="form-row">
-        <Field label="Email address" required kind="text" errored={emailErr}>
-          <input
-            className="input"
-            type="email"
-            placeholder=" "
-            value={form.email}
-            onChange={(e) => set("email", e.target.value)}
-          />
-        </Field>
+      <div className="form-row" style={{ gridTemplateColumns: "1fr" }}>
         <Field label="Phone number" required kind="text" errored={errors.includes("Phone number")}>
           <input
             className="input"
@@ -623,25 +594,39 @@ function Step2({
   );
 }
 
-function Step3({
+function Step2({
   form,
+  set,
   toggleInterest,
+  errors,
 }: {
   form: FormState;
+  set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
   toggleInterest: (v: string) => void;
+  errors: string[];
 }) {
   return (
     <section className="msf-step animate-[msfIn_420ms_cubic-bezier(0.4,0,0.2,1)_both]">
       <div className="msf-step-head">
-        <span className="msf-step-num">03</span>
+        <span className="msf-step-num">02</span>
         <div>
           <h3 className="msf-step-title">
-            What are you <em>interested in?</em>
+            Your <em>goals.</em>
           </h3>
           <p className="msf-step-sub">
-            Select every service that matters to you — at least one.
+            What you want help with — and which services you&apos;re interested in.
           </p>
         </div>
+      </div>
+      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginBottom: 22 }}>
+        <Field label="Biggest challenge" optional kind="text">
+          <textarea
+            className="textarea"
+            placeholder=" "
+            value={form.challenge}
+            onChange={(e) => set("challenge", e.target.value)}
+          />
+        </Field>
       </div>
       <div className="check-grid">
         {INTERESTS.map((v) => {
@@ -664,43 +649,7 @@ function Step3({
           );
         })}
       </div>
-    </section>
-  );
-}
-
-function Step4({
-  form,
-  set,
-  errors,
-}: {
-  form: FormState;
-  set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
-  errors: string[];
-}) {
-  return (
-    <section className="msf-step animate-[msfIn_420ms_cubic-bezier(0.4,0,0.2,1)_both]">
-      <div className="msf-step-head">
-        <span className="msf-step-num">04</span>
-        <div>
-          <h3 className="msf-step-title">
-            A bit more <em>context.</em>
-          </h3>
-          <p className="msf-step-sub">
-            Helps us come to the call already prepared for your specific situation.
-          </p>
-        </div>
-      </div>
-      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginBottom: 22 }}>
-        <Field label="Biggest challenge" optional kind="text">
-          <textarea
-            className="textarea"
-            placeholder=" "
-            value={form.challenge}
-            onChange={(e) => set("challenge", e.target.value)}
-          />
-        </Field>
-      </div>
-      <div className="form-row" style={{ gridTemplateColumns: "1fr" }}>
+      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginTop: 22 }}>
         <Field label="How did you hear about Anova Co.?" required errored={errors.includes("How you heard about us")}>
           <select
             className="select"
@@ -745,7 +694,7 @@ function Step4({
   );
 }
 
-function Step5({
+function Step3({
   form,
   set,
 }: {
@@ -802,10 +751,10 @@ function Step5({
   return (
     <section className="msf-step animate-[msfIn_420ms_cubic-bezier(0.4,0,0.2,1)_both]">
       <div className="msf-step-head">
-        <span className="msf-step-num">05</span>
+        <span className="msf-step-num">03</span>
         <div>
           <h3 className="msf-step-title">
-            Pick your <em>time.</em>
+            Pick a <em>time.</em>
           </h3>
           <p className="msf-step-sub">
             Choose a date and time that works for your schedule — we&apos;ll confirm within 24 hours.

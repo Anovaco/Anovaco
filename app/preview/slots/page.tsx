@@ -4,6 +4,11 @@
 // screenshots and visual QA. Mirrors the layout of Step 5 on /contact.
 
 import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+
+if (process.env.NODE_ENV === "production") {
+  notFound();
+}
 
 function slotsForDate(date: Date): string[] {
   const d = date.getDay();

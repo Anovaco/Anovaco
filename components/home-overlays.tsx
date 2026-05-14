@@ -13,7 +13,6 @@ const SECTIONS: { id: string; label: string }[] = [
 ];
 
 export function HomeOverlays() {
-  const [progress, setProgress] = useState(0);
   const [activeId, setActiveId] = useState<string>("hero");
   const [reduced, setReduced] = useState(false);
 
@@ -23,21 +22,19 @@ export function HomeOverlays() {
     setReduced(mq.matches);
   }, []);
 
-  // Scroll progress + parallax background
+  // Hero parallax background
   useEffect(() => {
     if (typeof window === "undefined") return;
     let raf = 0;
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    if (isMobile || reduced) return;
     const hero = document.getElementById("hero");
+    if (!hero) return;
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        const h = document.documentElement.scrollHeight - window.innerHeight;
         const y = window.scrollY;
-        setProgress(h > 0 ? (y / h) * 100 : 0);
-        if (hero && !isMobile && !reduced) {
-          hero.style.setProperty("--hero-bg-y", `${-y * 0.3}px`);
-        }
+        hero.style.setProperty("--hero-bg-y", `${-y * 0.3}px`);
       });
     };
     onScroll();
@@ -75,8 +72,6 @@ export function HomeOverlays() {
 
   return (
     <>
-      <div className="scroll-progress" style={{ width: `${progress}%` }} aria-hidden="true" />
-
       <div className="section-label" aria-hidden="true">
         <span key={activeLabel} className="section-label-text">
           {activeLabel}

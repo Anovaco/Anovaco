@@ -315,8 +315,9 @@ ${goldDivider}
 // notes captured during/after the call.
 export function getFollowUpEmail(data: EmailData): RenderedEmail {
   const subject = `Thank you, ${data.clientName} — next steps from today's call`;
-  // Placeholder — swap once the real Google review URL is available.
-  const reviewLink = "https://g.page/r/PLACEHOLDER_GOOGLE_REVIEW_LINK/review";
+  // TODO: Replace with real Google Business review URL
+  const GOOGLE_REVIEW_URL = "https://g.page/r/YOUR_REAL_ID_HERE/review";
+  const reviewLink = GOOGLE_REVIEW_URL;
 
   const body = `
 ${goldDivider}

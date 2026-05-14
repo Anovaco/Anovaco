@@ -8,7 +8,6 @@ import { HeroDashboard } from "@/components/hero-dashboard";
 import { ServiceAccordion } from "@/components/service-accordion";
 import { HomeOverlays } from "@/components/home-overlays";
 import { PageTransition } from "@/components/page-transition";
-import { TrustBar } from "@/components/trust-bar";
 
 export default function HomePage() {
   // Entrance animation: gate on sessionStorage + reduced-motion
@@ -94,9 +93,6 @@ export default function HomePage() {
           ))}
         </div>
       </div>
-
-      {/* ═══════════════════ TRUST BAR ═══════════════════ */}
-      <TrustBar />
 
       {/* ═══════════════════ PROBLEM ═══════════════════ */}
       <section id="problem" className="section-pad">
@@ -308,34 +304,6 @@ export default function HomePage() {
               No commitment required  ·  No packages  ·  No surprises
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ TESTIMONIALS ═══════════════════ */}
-      <section id="testimonials" className="section-pad">
-        <div className="section-container">
-          <div className="section-header">
-            <div className="section-num">05</div>
-            <div className="section-title-group">
-              <span className="eyebrow on-light">Results</span>
-              <h2 className="display-lg" style={{ color: "var(--green)" }}>
-                Businesses that
-                <br />
-                <em className="italic" style={{ color: "var(--gold)" }}>chose to grow.</em>
-              </h2>
-            </div>
-          </div>
-
-          <figure className="pull-quote">
-            <span className="pull-quote-rule" aria-hidden="true" />
-            <blockquote className="pull-quote-text">
-              Every engagement begins with understanding your business deeply.
-              Our clients don&apos;t get templates — they get strategies built
-              specifically for their market, their customers, and their goals.
-            </blockquote>
-            <span className="pull-quote-rule" aria-hidden="true" />
-            <figcaption className="pull-quote-cite">— Anova Co.</figcaption>
-          </figure>
         </div>
       </section>
 
