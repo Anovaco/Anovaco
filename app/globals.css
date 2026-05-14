@@ -1062,6 +1062,10 @@ section { position: relative; }
 }
 .anova-calendar .rdp-day_outside { color: rgba(51, 51, 51, 0.2); }
 .anova-calendar .rdp-day_selected.rdp-day_today::after { background: var(--gold); bottom: 4px; }
+.rdp-day_selected,
+.rdp-day_selected:hover {
+  color: #ffffff !important;
+}
 
 .time-panel {
   background: #fff; border: 1px solid var(--rule-strong);

@@ -932,7 +932,7 @@ function Step3({
           startMonth={today}
           endMonth={toMonth}
           weekStartsOn={1}
-          today={today}
+          today={new Date(0)}
           modifiers={{ today: isTodayLocal }}
         />
 
