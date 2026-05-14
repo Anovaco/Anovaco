@@ -1054,7 +1054,7 @@ section { position: relative; }
 .anova-calendar .rdp-day_selected,
 .anova-calendar .rdp-day_selected:hover,
 .anova-calendar .rdp-day_selected:focus-visible {
-  background: var(--green) !important; color: var(--canvas) !important;
+  background: var(--green) !important; color: #ffffff !important;
   border-color: var(--green) !important;
 }
 .anova-calendar .rdp-day_disabled {
