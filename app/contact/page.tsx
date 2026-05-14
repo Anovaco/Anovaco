@@ -598,7 +598,7 @@ function Step1({
           </p>
         </div>
       </div>
-      <div className="form-row">
+      <div className="grid grid-cols-2 gap-4 items-start mb-5">
         <Field
           label="Your name"
           required
@@ -607,7 +607,7 @@ function Step1({
           fieldName="name"
         >
           <input
-            className={`input${fieldErrors.name ? " border-red-500" : ""}`}
+            className={`input h-14${fieldErrors.name ? " border-red-500" : ""}`}
             placeholder=" "
             value={form.name}
             onChange={(e) => set("name", e.target.value)}
@@ -621,7 +621,7 @@ function Step1({
           fieldName="email"
         >
           <input
-            className={`input${fieldErrors.email ? " border-red-500" : ""}`}
+            className={`input h-14${fieldErrors.email ? " border-red-500" : ""}`}
             type="email"
             placeholder=" "
             value={form.email}
@@ -629,7 +629,7 @@ function Step1({
           />
         </Field>
       </div>
-      <div className="form-row">
+      <div className="grid grid-cols-2 gap-4 items-start mb-5">
         <Field
           label="Business name"
           required
@@ -638,20 +638,18 @@ function Step1({
           fieldName="business_name"
         >
           <input
-            className={`input${fieldErrors.business_name ? " border-red-500" : ""}`}
+            className={`input h-14${fieldErrors.business_name ? " border-red-500" : ""}`}
             placeholder=" "
             value={form.business_name}
             onChange={(e) => set("business_name", e.target.value)}
           />
         </Field>
-        <Field
-          label="Industry"
-          required
-          error={fieldErrors.industry}
-          fieldName="industry"
-        >
+        <div className="flex flex-col gap-1" data-field="industry">
+          <label className="form-label">
+            Industry <span className="req">*</span>
+          </label>
           <select
-            className={`select${fieldErrors.industry ? " border-red-500" : ""}`}
+            className={`select h-14${fieldErrors.industry ? " border-red-500" : ""}`}
             value={form.industry}
             onChange={(e) => set("industry", e.target.value)}
           >
@@ -662,9 +660,17 @@ function Step1({
               </option>
             ))}
           </select>
-        </Field>
+          {fieldErrors.industry && (
+            <p
+              className="field-error"
+              style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
+            >
+              {fieldErrors.industry}
+            </p>
+          )}
+        </div>
       </div>
-      <div className="form-row">
+      <div className="grid grid-cols-2 gap-4 items-start mb-5">
         <Field
           label="City / Neighbourhood"
           required
@@ -673,20 +679,18 @@ function Step1({
           fieldName="city"
         >
           <input
-            className={`input${fieldErrors.city ? " border-red-500" : ""}`}
+            className={`input h-14${fieldErrors.city ? " border-red-500" : ""}`}
             placeholder=" "
             value={form.city}
             onChange={(e) => set("city", e.target.value)}
           />
         </Field>
-        <Field
-          label="Your role"
-          required
-          error={fieldErrors.role}
-          fieldName="role"
-        >
+        <div className="flex flex-col gap-1" data-field="role">
+          <label className="form-label">
+            Your role <span className="req">*</span>
+          </label>
           <select
-            className={`select${fieldErrors.role ? " border-red-500" : ""}`}
+            className={`select h-14${fieldErrors.role ? " border-red-500" : ""}`}
             value={form.role}
             onChange={(e) => set("role", e.target.value)}
           >
@@ -697,12 +701,17 @@ function Step1({
               </option>
             ))}
           </select>
-        </Field>
+          {fieldErrors.role && (
+            <p
+              className="field-error"
+              style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
+            >
+              {fieldErrors.role}
+            </p>
+          )}
+        </div>
       </div>
-      <div
-        className="form-row"
-        style={{ gridTemplateColumns: "1fr 1fr", alignItems: "start" }}
-      >
+      <div className="grid grid-cols-2 gap-4 items-start mb-5">
         <Field
           label="Phone number"
           required
@@ -711,24 +720,19 @@ function Step1({
           fieldName="phone"
         >
           <input
-            className={`input${fieldErrors.phone ? " border-red-500" : ""}`}
+            className={`input h-14${fieldErrors.phone ? " border-red-500" : ""}`}
             type="tel"
             placeholder=" "
             value={form.phone}
             onChange={(e) => set("phone", e.target.value)}
           />
         </Field>
-        <p
-          style={{
-            alignSelf: "center",
-            fontSize: 12,
-            color: "var(--muted)",
-            lineHeight: 1.5,
-            margin: 0,
-          }}
+        <div
+          className="flex items-center h-14"
+          style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.5 }}
         >
           We&apos;ll never share your number.
-        </p>
+        </div>
       </div>
     </section>
   );
@@ -845,14 +849,19 @@ function Step3({
   const toMonth = useMemo(() => addMonths(today, 6), [today]);
   const slots = useMemo(() => slotsForDate(form.date), [form.date]);
 
-  const isTodayLocal = useMemo(() => {
-    const t = new Date();
-    const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
-    return (date: Date) => {
-      const cellStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-      return todayStr === cellStr;
-    };
+  const [todayStr, setTodayStr] = useState<string>("");
+
+  useEffect(() => {
+    const now = new Date();
+    const str = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    setTodayStr(str);
   }, []);
+
+  const isTodayLocal = (date: Date): boolean => {
+    if (!todayStr) return false;
+    const cellStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    return cellStr === todayStr;
+  };
 
   // Booked slots for the selected date — fetched from /api/availability,
   // which queries Google Calendar freebusy as the source of truth.
