@@ -1048,20 +1048,24 @@ section { position: relative; }
 .anova-calendar .rdp-day_selected,
 .anova-calendar .rdp-day_selected:hover,
 .anova-calendar .rdp-day_selected:focus-visible {
-  background: var(--green) !important; color: #ffffff !important;
-  border-color: var(--green) !important;
+  background-color: transparent !important;
+  color: #333333 !important;
+  border: 2px solid #D4AF37 !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
 }
 .anova-calendar .rdp-day_disabled {
   color: rgba(51, 51, 51, 0.25); cursor: not-allowed; text-decoration: line-through;
 }
 .anova-calendar .rdp-day_outside { color: rgba(51, 51, 51, 0.2); }
-.rdp-day_selected {
-  background-color: #1B2B21 !important;
-  color: #ffffff !important;
-}
-.rdp-day_selected:hover {
-  background-color: #1B2B21 !important;
-  color: #ffffff !important;
+.rdp-day_selected,
+.rdp-day_selected:hover,
+.rdp-day_selected:focus {
+  background-color: transparent !important;
+  color: #333333 !important;
+  border: 2px solid #D4AF37 !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
 }
 .anova-calendar .rdp-day.anova-today { position: relative; }
 .anova-calendar .rdp-day.anova-today::after {

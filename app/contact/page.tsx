@@ -598,7 +598,7 @@ function Step1({
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-start mb-5">
+      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
         <Field
           label="Your name"
           required
@@ -629,7 +629,7 @@ function Step1({
           />
         </Field>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-start mb-5">
+      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
         <Field
           label="Business name"
           required
@@ -644,33 +644,35 @@ function Step1({
             onChange={(e) => set("business_name", e.target.value)}
           />
         </Field>
-        <div className="flex flex-col gap-1" data-field="industry">
-          <label className="form-label">
-            Industry <span className="req">*</span>
-          </label>
-          <select
-            className={`select h-14${fieldErrors.industry ? " border-red-500" : ""}`}
-            value={form.industry}
-            onChange={(e) => set("industry", e.target.value)}
-          >
-            <option value="">Select one…</option>
-            {INDUSTRIES.map((i) => (
-              <option key={i} value={i}>
-                {i}
-              </option>
-            ))}
-          </select>
-          {fieldErrors.industry && (
-            <p
-              className="field-error"
-              style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
+        <div className="flex flex-col justify-end">
+          <div className="flex flex-col gap-1" data-field="industry">
+            <label className="form-label">
+              Industry <span className="req">*</span>
+            </label>
+            <select
+              className={`select h-14${fieldErrors.industry ? " border-red-500" : ""}`}
+              value={form.industry}
+              onChange={(e) => set("industry", e.target.value)}
             >
-              {fieldErrors.industry}
-            </p>
-          )}
+              <option value="">Select one…</option>
+              {INDUSTRIES.map((i) => (
+                <option key={i} value={i}>
+                  {i}
+                </option>
+              ))}
+            </select>
+            {fieldErrors.industry && (
+              <p
+                className="field-error"
+                style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
+              >
+                {fieldErrors.industry}
+              </p>
+            )}
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-start mb-5">
+      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
         <Field
           label="City / Neighbourhood"
           required
@@ -685,33 +687,35 @@ function Step1({
             onChange={(e) => set("city", e.target.value)}
           />
         </Field>
-        <div className="flex flex-col gap-1" data-field="role">
-          <label className="form-label">
-            Your role <span className="req">*</span>
-          </label>
-          <select
-            className={`select h-14${fieldErrors.role ? " border-red-500" : ""}`}
-            value={form.role}
-            onChange={(e) => set("role", e.target.value)}
-          >
-            <option value="">Select one…</option>
-            {ROLES.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-          {fieldErrors.role && (
-            <p
-              className="field-error"
-              style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
+        <div className="flex flex-col justify-end">
+          <div className="flex flex-col gap-1" data-field="role">
+            <label className="form-label">
+              Your role <span className="req">*</span>
+            </label>
+            <select
+              className={`select h-14${fieldErrors.role ? " border-red-500" : ""}`}
+              value={form.role}
+              onChange={(e) => set("role", e.target.value)}
             >
-              {fieldErrors.role}
-            </p>
-          )}
+              <option value="">Select one…</option>
+              {ROLES.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+            {fieldErrors.role && (
+              <p
+                className="field-error"
+                style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
+              >
+                {fieldErrors.role}
+              </p>
+            )}
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-start mb-5">
+      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
         <Field
           label="Phone number"
           required
