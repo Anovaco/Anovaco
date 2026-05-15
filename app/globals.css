@@ -1055,12 +1055,31 @@ section { position: relative; }
   color: rgba(51, 51, 51, 0.25); cursor: not-allowed; text-decoration: line-through;
 }
 .anova-calendar .rdp-day_outside { color: rgba(51, 51, 51, 0.2); }
-.rdp-day_selected,
+.rdp-day_selected {
+  background-color: #1B2B21 !important;
+  color: #ffffff !important;
+}
 .rdp-day_selected:hover {
+  background-color: #1B2B21 !important;
   color: #ffffff !important;
 }
 .anova-calendar .rdp-day.anova-today { position: relative; }
 .anova-calendar .rdp-day.anova-today::after {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #D4AF37;
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.anova-today {
+  position: relative;
+}
+.anova-today::after {
   content: '';
   display: block;
   width: 4px;
