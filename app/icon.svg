@@ -1,0 +1,9 @@
+<svg viewBox="0 0 220 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon mark -->
+  <rect width="52" height="52" rx="8" fill="#1B2B21"/>
+  <path d="M26 10 L38 38 H32.5 L26 24 L19.5 38 H14 Z" fill="#F4F1ED"/>
+  <rect x="18" y="28" width="16" height="2.5" rx="1.25" fill="#D4AF37"/>
+  <!-- Wordmark - thin, spaced, uppercase -->
+  <text x="68" y="30" font-family="'DM Sans', sans-serif" font-weight="300" font-size="14" letter-spacing="5" fill="#1B2B21" text-anchor="start">ANOVA</text>
+  <text x="68" y="44" font-family="'DM Sans', sans-serif" font-weight="300" font-size="10" letter-spacing="6" fill="#D4AF37" text-anchor="start">CO.</text>
+</svg>

@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
   description: OG_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: "/icon.svg",
+  },
   openGraph: {
     title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
     description: OG_DESCRIPTION,

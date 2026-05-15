@@ -1045,12 +1045,6 @@ section { position: relative; }
 .anova-calendar .rdp-day:hover:not([disabled]):not(.rdp-day_selected) {
   background: var(--canvas-2); border-color: var(--rule-strong);
 }
-.anova-calendar .rdp-day_today::after {
-  content: ""; position: absolute;
-  left: 50%; bottom: 5px; transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%;
-  background: var(--gold);
-}
 .anova-calendar .rdp-day_selected,
 .anova-calendar .rdp-day_selected:hover,
 .anova-calendar .rdp-day_selected:focus-visible {
@@ -1061,10 +1055,17 @@ section { position: relative; }
   color: rgba(51, 51, 51, 0.25); cursor: not-allowed; text-decoration: line-through;
 }
 .anova-calendar .rdp-day_outside { color: rgba(51, 51, 51, 0.2); }
-.anova-calendar .rdp-day_selected.rdp-day_today::after { background: var(--gold); bottom: 4px; }
 .rdp-day_selected,
 .rdp-day_selected:hover {
   color: #ffffff !important;
+}
+.today-dot {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #D4AF37;
+  margin: 0 auto;
 }
 
 .time-panel {
