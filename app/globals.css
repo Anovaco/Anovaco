@@ -1059,13 +1059,18 @@ section { position: relative; }
 .rdp-day_selected:hover {
   color: #ffffff !important;
 }
-.today-dot {
+.anova-calendar .rdp-day.anova-today { position: relative; }
+.anova-calendar .rdp-day.anova-today::after {
+  content: '';
   display: block;
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background-color: #D4AF37;
-  margin: 0 auto;
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .time-panel {

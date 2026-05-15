@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format, addMonths, startOfDay } from "date-fns";
-import type { DayProps } from "react-day-picker";
 import { Calendar } from "@/components/ui/calendar";
 import { AnovaLogo } from "@/components/anova-logo";
 import { PageTransition } from "@/components/page-transition";
@@ -928,22 +927,15 @@ function Step3({
           startMonth={today}
           endMonth={toMonth}
           weekStartsOn={1}
-          components={{
-            Day: ({ day, ...props }: DayProps) => {
-              const date = day.date;
-              const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-              const isToday = dateStr === todayStr;
-              return (
-                <td
-                  {...(props as unknown as React.TdHTMLAttributes<HTMLTableCellElement>)}
-                  className={`rdp-day${isToday ? " anova-today" : ""}`}
-                >
-                  {date.getDate()}
-                  {isToday && <span className="today-dot" />}
-                </td>
-              );
+          today={new Date(0)}
+          modifiers={{
+            myToday: (date: Date) => {
+              if (!todayStr) return false;
+              const d = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+              return d === todayStr;
             },
           }}
+          modifiersClassNames={{ myToday: "anova-today" }}
         />
 
         <div className="time-panel">
