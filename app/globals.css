@@ -812,8 +812,8 @@ section { position: relative; }
   font-style: italic; color: var(--gold);
   text-transform: none; letter-spacing: 0.02em; font-size: 12px;
 }
-.contact-right { padding: 140px 64px 96px; background: var(--canvas); }
-.form-head { margin-bottom: 56px; padding-bottom: 32px; border-bottom: 1px solid var(--rule); }
+.contact-right { padding: 72px 64px 48px; background: var(--canvas); }
+.form-head { margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
 .form-title {
   font-family: var(--font-playfair), "Playfair Display", serif;
   font-weight: 400; font-size: clamp(2rem, 3vw, 2.5rem);
@@ -843,7 +843,7 @@ section { position: relative; }
   width: 100%; appearance: none; -webkit-appearance: none;
   font-family: inherit;
 }
-.textarea { min-height: 120px; resize: vertical; line-height: 1.7; }
+.textarea { min-height: 90px; resize: vertical; line-height: 1.7; }
 .input:focus, .select:focus, .textarea:focus {
   outline: none; border-color: var(--green);
   box-shadow: 0 0 0 3px rgba(27, 43, 33, 0.08);
@@ -856,7 +856,7 @@ section { position: relative; }
   background-repeat: no-repeat; background-position: right 18px center; padding-right: 40px;
 }
 
-.check-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.check-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 @media (max-width: 640px) { .check-grid { grid-template-columns: 1fr; } }
 .check-item {
   display: flex; align-items: center; gap: 14px;
@@ -893,7 +893,7 @@ section { position: relative; }
 .form-errors strong { font-weight: 500; display: block; margin-bottom: 4px; letter-spacing: 0.02em; }
 
 /* Multi-step */
-.msf-progress { margin-bottom: 40px; }
+.msf-progress { margin-bottom: 24px; }
 .msf-dots {
   display: flex; justify-content: space-between; align-items: flex-start;
   gap: 8px; margin-bottom: 14px;
@@ -926,7 +926,7 @@ section { position: relative; }
 .msf-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); transition: width 500ms var(--ease); }
 
 .msf-step-head {
-  margin-bottom: 28px; padding-bottom: 20px;
+  margin-bottom: 16px; padding-bottom: 12px;
   border-bottom: 1px solid var(--rule);
   display: grid; grid-template-columns: 60px 1fr; gap: 24px; align-items: baseline;
 }
@@ -945,7 +945,7 @@ section { position: relative; }
 
 .msf-nav {
   display: flex; justify-content: space-between; align-items: center; gap: 16px;
-  margin-top: 40px; padding-top: 28px;
+  margin-top: 24px; padding-top: 18px;
   border-top: 1px solid var(--rule);
 }
 .msf-btn {
@@ -1029,14 +1029,14 @@ section { position: relative; }
 .anova-calendar .rdp-nav_button:hover { background: var(--canvas); border-color: var(--green); }
 .anova-calendar .rdp-nav_button:disabled { opacity: 0.35; cursor: not-allowed; }
 .anova-calendar .rdp-head_cell {
-  font-size: 10px; font-weight: 500;
+  width: 36px; font-size: 11px; font-weight: 500;
   letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--muted); padding: 10px 0;
 }
 .anova-calendar .rdp-table { width: 100%; border-collapse: collapse; }
-.anova-calendar .rdp-cell { text-align: center; padding: 2px; }
+.anova-calendar .rdp-cell { width: 36px; height: 36px; text-align: center; padding: 2px; }
 .anova-calendar .rdp-day {
-  width: 40px; height: 40px; font-size: 14px; font-weight: 400;
+  width: 36px; height: 36px; font-size: 13px; font-weight: 400;
   color: var(--ink); background: transparent; border: 1px solid transparent;
   cursor: pointer; position: relative; border-radius: 0;
   transition: background 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease);
@@ -1098,8 +1098,8 @@ section { position: relative; }
 
 .time-panel {
   background: #fff; border: 1px solid var(--rule-strong);
-  padding: 24px; display: flex; flex-direction: column; gap: 14px;
-  min-height: 360px;
+  padding: 20px; display: flex; flex-direction: column; gap: 12px;
+  min-height: 320px;
 }
 .time-panel-head {
   font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
@@ -1109,7 +1109,7 @@ section { position: relative; }
 .time-empty { color: var(--muted); font-size: 13px; font-style: italic; padding: 40px 0; text-align: center; }
 .time-list {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-  max-height: 360px; overflow-y: auto; padding-right: 6px;
+  max-height: 320px; overflow-y: auto; padding-right: 6px;
 }
 .time-btn {
   padding: 12px 16px; font-size: 13px; font-weight: 400;

@@ -402,7 +402,7 @@ export default function ContactPage() {
 
       <div className="contact-shell">
         {/* Left panel */}
-        <aside className="contact-left">
+        <aside className="contact-left sticky top-0 h-screen overflow-y-auto">
           <div>
             <div className="contact-rule" />
             <span className="eyebrow">Complimentary Audit</span>
@@ -471,6 +471,7 @@ export default function ContactPage() {
 
         {/* Right form panel */}
         <main className="contact-right">
+          <div className="sticky top-0 z-10 bg-[#F4F1ED] pb-4 border-b border-[#e8e4de] contact-sticky-head">
           <div className="form-head">
             <h2 className="form-title">
               Book your <em>complimentary audit.</em>
@@ -504,6 +505,7 @@ export default function ContactPage() {
             <div className={`draft-saved${draftSaved ? " is-on" : ""}`} aria-live="polite">
               Draft saved
             </div>
+          </div>
           </div>
 
           {/* Step panels */}
@@ -598,52 +600,61 @@ function Step1({
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
-        <Field
-          label="Your name"
-          required
-          kind="text"
-          error={fieldErrors.name}
-          fieldName="name"
-        >
-          <input
-            className={`input h-14${fieldErrors.name ? " border-red-500" : ""}`}
-            placeholder=" "
-            value={form.name}
-            onChange={(e) => set("name", e.target.value)}
-          />
-        </Field>
-        <Field
-          label="Email address"
-          required
-          kind="text"
-          error={fieldErrors.email}
-          fieldName="email"
-        >
-          <input
-            className={`input h-14${fieldErrors.email ? " border-red-500" : ""}`}
-            type="email"
-            placeholder=" "
-            value={form.email}
-            onChange={(e) => set("email", e.target.value)}
-          />
-        </Field>
+      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+        <div>
+          <div className="h-5 mb-1" />
+          <Field
+            label="Your name"
+            required
+            kind="text"
+            error={fieldErrors.name}
+            fieldName="name"
+          >
+            <input
+              className={`input h-14${fieldErrors.name ? " border-red-500" : ""}`}
+              placeholder=" "
+              value={form.name}
+              onChange={(e) => set("name", e.target.value)}
+            />
+          </Field>
+        </div>
+        <div>
+          <div className="h-5 mb-1" />
+          <Field
+            label="Email address"
+            required
+            kind="text"
+            error={fieldErrors.email}
+            fieldName="email"
+          >
+            <input
+              className={`input h-14${fieldErrors.email ? " border-red-500" : ""}`}
+              type="email"
+              placeholder=" "
+              value={form.email}
+              onChange={(e) => set("email", e.target.value)}
+            />
+          </Field>
+        </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
-        <Field
-          label="Business name"
-          required
-          kind="text"
-          error={fieldErrors.business_name}
-          fieldName="business_name"
-        >
-          <input
-            className={`input h-14${fieldErrors.business_name ? " border-red-500" : ""}`}
-            placeholder=" "
-            value={form.business_name}
-            onChange={(e) => set("business_name", e.target.value)}
-          />
-        </Field>
+      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+        <div>
+          <div className="h-5 mb-1" />
+          <Field
+            label="Business name"
+            required
+            kind="text"
+            error={fieldErrors.business_name}
+            fieldName="business_name"
+          >
+            <input
+              className={`input h-14${fieldErrors.business_name ? " border-red-500" : ""}`}
+              placeholder=" "
+              value={form.business_name}
+              onChange={(e) => set("business_name", e.target.value)}
+            />
+          </Field>
+        </div>
         <div className="flex flex-col justify-end">
           <div className="flex flex-col gap-1" data-field="industry">
             <label className="form-label">
@@ -672,21 +683,24 @@ function Step1({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
-        <Field
-          label="City / Neighbourhood"
-          required
-          kind="text"
-          error={fieldErrors.city}
-          fieldName="city"
-        >
-          <input
-            className={`input h-14${fieldErrors.city ? " border-red-500" : ""}`}
-            placeholder=" "
-            value={form.city}
-            onChange={(e) => set("city", e.target.value)}
-          />
-        </Field>
+      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+        <div>
+          <div className="h-5 mb-1" />
+          <Field
+            label="City / Neighbourhood"
+            required
+            kind="text"
+            error={fieldErrors.city}
+            fieldName="city"
+          >
+            <input
+              className={`input h-14${fieldErrors.city ? " border-red-500" : ""}`}
+              placeholder=" "
+              value={form.city}
+              onChange={(e) => set("city", e.target.value)}
+            />
+          </Field>
+        </div>
         <div className="flex flex-col justify-end">
           <div className="flex flex-col gap-1" data-field="role">
             <label className="form-label">
@@ -715,22 +729,25 @@ function Step1({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 items-stretch mb-5">
-        <Field
-          label="Phone number"
-          required
-          kind="text"
-          error={fieldErrors.phone}
-          fieldName="phone"
-        >
-          <input
-            className={`input h-14${fieldErrors.phone ? " border-red-500" : ""}`}
-            type="tel"
-            placeholder=" "
-            value={form.phone}
-            onChange={(e) => set("phone", e.target.value)}
-          />
-        </Field>
+      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+        <div>
+          <div className="h-5 mb-1" />
+          <Field
+            label="Phone number"
+            required
+            kind="text"
+            error={fieldErrors.phone}
+            fieldName="phone"
+          >
+            <input
+              className={`input h-14${fieldErrors.phone ? " border-red-500" : ""}`}
+              type="tel"
+              placeholder=" "
+              value={form.phone}
+              onChange={(e) => set("phone", e.target.value)}
+            />
+          </Field>
+        </div>
         <div
           className="flex items-center h-14"
           style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.5 }}
@@ -787,7 +804,7 @@ function Step2({
           );
         })}
       </div>
-      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginTop: 22, marginBottom: 22 }}>
+      <div className="form-row" style={{ gridTemplateColumns: "1fr", marginTop: 14, marginBottom: 14 }}>
         <Field label="Biggest challenge" optional kind="text">
           <textarea
             className="textarea"
