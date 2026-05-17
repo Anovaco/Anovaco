@@ -492,7 +492,7 @@ export default function ContactPage() {
           </div>
 
           <div className="contact-left-bottom">
-            <span>Toronto / MMXXVI</span>
+            <span>MMXXVI</span>
             <em>Growth, engineered.</em>
           </div>
         </aside>

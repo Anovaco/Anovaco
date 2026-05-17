@@ -36,9 +36,9 @@ export default function HomePage() {
         <div className="hero-top">
           <span className="hero-pill intro-pill">
             <span className="dot" />
-            AI-Powered Growth Agency — Toronto
+            AI-Powered Growth Agency
           </span>
-          <div className="hero-meta">Toronto, Canada</div>
+          <div className="hero-meta"></div>
         </div>
 
         <div className="hero-grid">
@@ -168,7 +168,7 @@ export default function HomePage() {
               </p>
               <div className="problem-card-sig">
                 <div className="problem-card-sig-left">— Growth, engineered.</div>
-                <div className="problem-card-sig-right">Toronto / MMXXVI</div>
+                <div className="problem-card-sig-right">MMXXVI</div>
               </div>
             </aside>
           </div>

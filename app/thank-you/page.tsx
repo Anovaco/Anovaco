@@ -360,7 +360,7 @@ function ThankYouContent() {
               </span>
             </div>
             <div className="foot-center">
-              © MMXXVI  ·  Anova Co.  ·  Toronto, Canada
+              © MMXXVI  ·  Anova Co.
             </div>
             <div className="foot-right">
               <Link href="/" className="foot-link">

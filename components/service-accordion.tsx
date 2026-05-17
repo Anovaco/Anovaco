@@ -241,7 +241,7 @@ function Bar({ label, value, pct }: { label: string; value: string; pct: number 
 function PreviewSeo() {
   return (
     <div className="prv prv-seo">
-      <div className="prv-search">best [service] toronto</div>
+      <div className="prv-search">best [service] near me</div>
       <div className="prv-seo-grid">
         <div className="prv-results">
           <div className="prv-result is-top">

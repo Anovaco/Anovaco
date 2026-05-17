@@ -15,7 +15,7 @@ export function SiteFooter() {
               Anova <span className="co">Co.</span>
             </span>
           </div>
-          <div className="foot-center">© MMXXVI  ·  Anova Co.  ·  Toronto, Canada</div>
+          <div className="foot-center">© MMXXVI  ·  Anova Co.</div>
           <div className="foot-right">
             <Link href="/#services" className="foot-link">Services</Link>
             <Link href="/#investment" className="foot-link">Investment</Link>

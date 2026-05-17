@@ -87,7 +87,7 @@ const header = `
 const footer = `
 <tr>
   <td style="background:${FOREST};padding:24px 40px;border-top:1px solid rgba(212,175,55,0.15);text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:0.1em;color:rgba(244,241,237,0.4);">
-    &copy; 2025 Anova Co. &middot; Toronto, Canada &middot; anovaco.ca
+    &copy; 2025 Anova Co. &middot; anovaco.ca
   </td>
 </tr>`;
 

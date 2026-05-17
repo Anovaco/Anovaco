@@ -22,17 +22,17 @@ const playfair = Playfair_Display({
 
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://anovaco.ca";
 const OG_DESCRIPTION =
-  "AI-powered digital growth agency in Toronto. Custom AI Systems, websites, SEO, ads, and reputation management for local businesses.";
+  "AI-powered digital growth agency. Custom AI Systems, websites, SEO, ads, and reputation management for local businesses.";
 
 export const metadata: Metadata = {
-  title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
+  title: "Anova Co. | AI-Powered Digital Growth Agency",
   description: OG_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   icons: {
     icon: "/icon.svg",
   },
   openGraph: {
-    title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
+    title: "Anova Co. | AI-Powered Digital Growth Agency",
     description: OG_DESCRIPTION,
     url: SITE_URL,
     siteName: "Anova Co.",
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
+        alt: "Anova Co. | AI-Powered Digital Growth Agency",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anova Co. | AI-Powered Digital Growth Agency Toronto",
+    title: "Anova Co. | AI-Powered Digital Growth Agency",
     description: OG_DESCRIPTION,
     images: ["/og-image.png"],
   },
@@ -62,12 +62,6 @@ const localBusinessJsonLd = {
     "AI-powered digital growth agency helping local service businesses grow through AI automation, web design, Google & Meta Ads, SEO, social media management, and reputation management.",
   url: "https://anovaco.ca",
   email: "ano@anovaco.ca",
-  areaServed: {
-    "@type": "City",
-    name: "Toronto",
-    addressRegion: "ON",
-    addressCountry: "CA",
-  },
   serviceType: [
     "AI Automation",
     "Website Design",
