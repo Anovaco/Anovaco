@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { AnovaLogo } from "./anova-logo";
+import { scrollToAnchor } from "@/lib/scroll-to-anchor";
 
 export function SiteFooter() {
   return (
@@ -17,8 +20,20 @@ export function SiteFooter() {
           </div>
           <div className="foot-center">© MMXXVI  ·  Anova Co.</div>
           <div className="foot-right">
-            <Link href="/#services" className="foot-link">Services</Link>
-            <Link href="/#investment" className="foot-link">Investment</Link>
+            <Link
+              href="/#services"
+              className="foot-link"
+              onClick={(e) => { if (scrollToAnchor("/#services")) e.preventDefault(); }}
+            >
+              Services
+            </Link>
+            <Link
+              href="/#investment"
+              className="foot-link"
+              onClick={(e) => { if (scrollToAnchor("/#investment")) e.preventDefault(); }}
+            >
+              Investment
+            </Link>
             <Link href="/contact" className="foot-link">Contact</Link>
           </div>
         </div>

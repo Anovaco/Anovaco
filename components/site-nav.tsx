@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { AnovaLogo } from "./anova-logo";
+import { scrollToAnchor } from "@/lib/scroll-to-anchor";
 
 interface SiteNavProps {
   /** If true, the nav stays in the "light" variant regardless of scroll (used on sub-pages). */
@@ -74,13 +75,37 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
         </Link>
 
         <div className="nav-links">
-          <Link href="/#services" className="nav-link">Services</Link>
+          <Link
+            href="/#services"
+            className="nav-link"
+            onClick={(e) => { if (scrollToAnchor("/#services")) e.preventDefault(); }}
+          >
+            Services
+          </Link>
           <span className="nav-sep" aria-hidden="true">·</span>
-          <Link href="/#process" className="nav-link">Process</Link>
+          <Link
+            href="/#process"
+            className="nav-link"
+            onClick={(e) => { if (scrollToAnchor("/#process")) e.preventDefault(); }}
+          >
+            Process
+          </Link>
           <span className="nav-sep" aria-hidden="true">·</span>
-          <Link href="/#investment" className="nav-link">Investment</Link>
+          <Link
+            href="/#investment"
+            className="nav-link"
+            onClick={(e) => { if (scrollToAnchor("/#investment")) e.preventDefault(); }}
+          >
+            Investment
+          </Link>
           <span className="nav-sep" aria-hidden="true">·</span>
-          <Link href="/#results" className="nav-link">Results</Link>
+          <Link
+            href="/#results"
+            className="nav-link"
+            onClick={(e) => { if (scrollToAnchor("/#results")) e.preventDefault(); }}
+          >
+            Results
+          </Link>
         </div>
 
         <Link href="/contact" className="nav-cta">
@@ -170,7 +195,12 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
             <Link
               key={item.href}
               href={item.href}
-              onClick={closeDrawer}
+              onClick={(e) => {
+                if (scrollToAnchor(item.href)) {
+                  e.preventDefault();
+                  closeDrawer();
+                }
+              }}
               style={{
                 color: "#F4F1ED",
                 textDecoration: "none",

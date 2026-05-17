@@ -5,9 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { HeroDashboard } from "@/components/hero-dashboard";
-import { ServiceAccordion } from "@/components/service-accordion";
+import { ServiceCarousel } from "@/components/service-carousel";
 import { HomeOverlays } from "@/components/home-overlays";
 import { PageTransition } from "@/components/page-transition";
+import { scrollToAnchor } from "@/lib/scroll-to-anchor";
 
 export default function HomePage() {
   // Entrance animation: gate on sessionStorage + reduced-motion
@@ -59,7 +60,11 @@ export default function HomePage() {
               <Link href="/contact" className="btn btn-gold">
                 Book a Free Audit <span className="arrow">→</span>
               </Link>
-              <Link href="#services" className="btn btn-underline">
+              <Link
+                href="#services"
+                className="btn btn-underline"
+                onClick={(e) => { if (scrollToAnchor("#services")) e.preventDefault(); }}
+              >
                 See what we do
               </Link>
             </div>
@@ -176,7 +181,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════ SERVICES ═══════════════════ */}
-      <section id="services" className="section-pad">
+      <section id="services" style={{ margin: 0, padding: 0, display: "block" }}>
         <div className="section-container">
           <div className="section-header">
             <div className="section-num">02</div>
@@ -200,7 +205,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <ServiceAccordion />
+          <ServiceCarousel />
         </div>
       </section>
 
