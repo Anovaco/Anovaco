@@ -1006,8 +1006,9 @@ function Step3({
               const d = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
               return d === todayStr;
             },
+            sunday: { dayOfWeek: [0] },
           }}
-          modifiersClassNames={{ myToday: "anova-today" }}
+          modifiersClassNames={{ myToday: "anova-today", sunday: "cal-day-sunday" }}
         />
 
         <div className="time-panel">

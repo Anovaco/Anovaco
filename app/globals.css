@@ -1072,6 +1072,11 @@ section { position: relative; }
   border-radius: 4px !important;
   font-weight: 600 !important;
 }
+.cal-day-sunday {
+  color: rgba(51, 51, 51, 0.3) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
 .anova-calendar .rdp-day.anova-today { position: relative; }
 .anova-calendar .rdp-day.anova-today::after {
   content: '';
