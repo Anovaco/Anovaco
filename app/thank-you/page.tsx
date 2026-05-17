@@ -70,7 +70,7 @@ const TORONTO_VTIMEZONE = [
 
 type TimeParts = { y: number; mo: number; d: number; h: number; mi: number };
 
-function buildICS(parts: TimeParts, meetLink: string): string {
+function buildICS(parts: TimeParts, meetLink: string, booking: Booking): string {
   const start = toLocalStamp(parts.y, parts.mo, parts.d, parts.h, parts.mi);
   // Use Date arithmetic so the 30-min end correctly rolls into the next day
   // when the start sits near midnight. Local-tz cancels out because we feed
@@ -85,7 +85,7 @@ function buildICS(parts: TimeParts, meetLink: string): string {
   );
 
   const now = new Date();
-  const uid = `anova-${now.getTime()}@anovaco.ca`;
+  const uid = `anova-${booking.date}-${booking.time.replace(/[^0-9]/g, "")}@anovaco.ca`;
   const description = ics("Your complimentary 30-minute business growth audit with Anova Co. — anovaco.ca");
   const location = ics(meetLink || "Google Meet");
 
@@ -138,14 +138,15 @@ function buildGoogleCalendarUrl(parts: TimeParts, meetLink: string): string {
   const endUtc = new Date(startUtc.getTime() + 30 * 60 * 1000);
   const start = toUTCStamp(startUtc);
   const end = toUTCStamp(endUtc);
+  const details =
+    "Your complimentary 30-minute business growth audit with Anova Co." +
+    (meetLink ? `\n\nJoin here: ${meetLink}` : "");
   return (
     "https://calendar.google.com/calendar/render?action=TEMPLATE" +
     "&text=Anova+Co.+Growth+Audit" +
     `&dates=${start}/${end}` +
     "&details=" +
-    encodeURIComponent(
-      `Your complimentary 30-minute business growth audit with Anova Co.\n\nJoin here: ${meetLink}`,
-    ) +
+    encodeURIComponent(details) +
     `&location=${encodeURIComponent(meetLink || "Google Meet")}`
   );
 }
@@ -198,8 +199,8 @@ function ThankYouContent() {
     : null;
 
   const downloadIcs = () => {
-    if (!timeParts) return;
-    const icsContent = buildICS(timeParts, booking?.meetLink || "");
+    if (!timeParts || !booking) return;
+    const icsContent = buildICS(timeParts, booking.meetLink || "", booking);
     const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -247,6 +248,21 @@ function ThankYouContent() {
         </Link>
       </nav>
 
+      {!humanWhen ? (
+        <div className="ty-shell">
+          <h1 className="ty-title">
+            Ready to <em>grow your business?</em>
+          </h1>
+          <p className="ty-sub">
+            Book your complimentary audit and we&apos;ll review your entire online presence.
+          </p>
+          <div className="ty-ctas">
+            <Link href="/contact" className="btn btn-gold">
+              Book a Free Audit <span className="arrow">→</span>
+            </Link>
+          </div>
+        </div>
+      ) : (
       <div className="ty-shell">
         <div className="ty-check" aria-hidden="true">
           <svg viewBox="0 0 46 46">
@@ -332,6 +348,7 @@ function ThankYouContent() {
           </Link>
         </div>
       </div>
+      )}
 
       <footer className="site-footer" style={{ marginTop: "auto" }}>
         <div className="section-container">

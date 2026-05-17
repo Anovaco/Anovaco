@@ -36,9 +36,21 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
       if (e.key === "Escape") setDrawerOpen(false);
     };
     window.addEventListener("keydown", onKey);
+
+    const drawer = document.getElementById("mobile-nav-drawer");
+    const siblings: Element[] = [];
+    Array.from(document.body.children).forEach((el) => {
+      if (el === drawer) return;
+      if (!el.hasAttribute("inert")) {
+        el.setAttribute("inert", "");
+        siblings.push(el);
+      }
+    });
+
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      siblings.forEach((el) => el.removeAttribute("inert"));
     };
   }, [drawerOpen]);
 
@@ -68,7 +80,7 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
           <span className="nav-sep" aria-hidden="true">·</span>
           <Link href="/#investment" className="nav-link">Investment</Link>
           <span className="nav-sep" aria-hidden="true">·</span>
-          <Link href="/#testimonials" className="nav-link">Results</Link>
+          <Link href="/#results" className="nav-link">Results</Link>
         </div>
 
         <Link href="/contact" className="nav-cta">
@@ -78,7 +90,7 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
         <button
           type="button"
           className="nav-menu-btn"
-          aria-label="Open menu"
+          aria-label={drawerOpen ? "Close menu" : "Open menu"}
           aria-expanded={drawerOpen}
           aria-controls="mobile-nav-drawer"
           onClick={() => setDrawerOpen(true)}
@@ -153,7 +165,7 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
             { href: "/#services", label: "Services" },
             { href: "/#process", label: "Process" },
             { href: "/#investment", label: "Investment" },
-            { href: "/#testimonials", label: "Results" },
+            { href: "/#results", label: "Results" },
           ].map((item) => (
             <Link
               key={item.href}

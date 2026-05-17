@@ -119,7 +119,7 @@ export function ServiceAccordion() {
               id={`acc-panel-${s.id}`}
               role="region"
               className="acc-panel"
-              aria-hidden={!open}
+              inert={!open || undefined}
             >
               <div className="acc-panel-inner">
                 <div className="acc-graphic">

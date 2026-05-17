@@ -206,7 +206,7 @@ export default function HomePage() {
 
       {/* ═══════════════════ PROCESS ═══════════════════ */}
       <section id="process" className="section-pad">
-        <div className="section-container">
+        <div id="results" className="section-container">
           <div className="section-header">
             <div className="section-num">03</div>
             <div className="section-title-group">
@@ -381,22 +381,42 @@ function HeroStats() {
       raf = requestAnimationFrame(step);
       return () => cancelAnimationFrame(raf);
     };
+    const triggerAnimations = () => {
+      animateNumber(3, 1200, setN1, 0);
+      animateNumber(40, 1400, setN2, 150);
+      animateNumber(30, 1200, setN3, 300);
+      setTimeout(() => setN4Visible(true), 450);
+    };
+    let fired = false;
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.isIntersecting && e.intersectionRatio >= 0.5) {
-            animateNumber(3, 1200, setN1, 0);
-            animateNumber(40, 1400, setN2, 150);
-            animateNumber(30, 1200, setN3, 300);
-            setTimeout(() => setN4Visible(true), 450);
+          if (e.isIntersecting || e.intersectionRatio > 0) {
+            if (fired) break;
+            fired = true;
+            triggerAnimations();
             obs.disconnect();
             break;
           }
         }
       },
-      { threshold: [0.5] }
+      { threshold: 0 }
     );
     obs.observe(node);
+
+    // Immediate trigger if element is already in viewport on mount
+    const rect = node.getBoundingClientRect();
+    const inViewport =
+      rect.bottom > 0 &&
+      rect.right > 0 &&
+      rect.top < (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.left < (window.innerWidth || document.documentElement.clientWidth);
+    if (inViewport && !fired) {
+      fired = true;
+      triggerAnimations();
+      obs.disconnect();
+    }
+
     return () => obs.disconnect();
   }, []);
 

@@ -6,6 +6,19 @@ import { format } from "date-fns";
 import { addBooking, type Booking } from "@/lib/bookings-store";
 import { getConfirmationEmail } from "@/lib/email-templates";
 import { isSlotTaken } from "@/lib/google-calendar";
+import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1 h"),
+  prefix: "anova:book",
+});
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,11 +37,41 @@ type Payload = {
   referral_other: string;
   date: string; // ISO day
   time: string; // "HH:mm" local (Toronto)
+  _hp?: string;
 };
+
 
 const TZ = "America/Toronto";
 const NOTIFY_TO = process.env.NOTIFICATION_EMAIL || "ano@anovaco.ca";
 const FROM = "Anova Co. <ano@anovaco.ca>";
+
+const ALLOWED_INDUSTRIES = [
+  "Restaurant / Café",
+  "Salon / Spa / Barbershop",
+  "Health & Wellness / Gym",
+  "Home Services",
+  "Retail Store",
+  "Real Estate",
+  "Legal / Accounting",
+  "Dental / Medical",
+  "Contractor / Trades",
+  "Other",
+];
+const ALLOWED_ROLES = [
+  "Owner",
+  "Co-owner / Partner",
+  "General Manager",
+  "Marketing Manager",
+  "Other",
+];
+const ALLOWED_REFERRAL_SOURCES = [
+  "Google Search",
+  "Instagram",
+  "Facebook",
+  "Referral",
+  "Cold email",
+  "Other",
+];
 
 /* ───────────── Helpers ───────────── */
 
@@ -147,6 +190,36 @@ async function createCalendarEvent(p: Payload): Promise<{ meetLink: string; even
 
 /* ───────────── Emails (Resend) ───────────── */
 
+function torontoOffsetMinutesAt(utcMs: number): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Toronto",
+    timeZoneName: "shortOffset",
+  }).formatToParts(new Date(utcMs));
+  const tz = parts.find((p) => p.type === "timeZoneName")?.value ?? "";
+  const m = tz.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/);
+  if (!m) return 0;
+  const sign = m[1] === "-" ? -1 : 1;
+  return sign * (parseInt(m[2], 10) * 60 + parseInt(m[3] ?? "0", 10));
+}
+
+function torontoLocalToUTCDate(isoLocal: string): Date {
+  const [datePart, timePart] = isoLocal.split("T");
+  const [y, mo, d] = datePart.split("-").map(Number);
+  const [h, mi] = timePart.split(":").map(Number);
+  const naive = Date.UTC(y, mo - 1, d, h, mi);
+  const offset = torontoOffsetMinutesAt(naive);
+  return new Date(naive - offset * 60000);
+}
+
+function escapeHtml(str: string): string {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function renderNotifyEmail(
   p: Payload,
   humanDate: string,
@@ -154,32 +227,34 @@ function renderNotifyEmail(
   calendarSucceeded: boolean,
   meetLink: string
 ): string {
-  const servicesList = p.interests.length ? p.interests.map((i) => `  • ${i}`).join("\n") : "  (none)";
+  const servicesList = p.interests.length
+    ? p.interests.map((i) => `  • ${escapeHtml(i)}`).join("\n")
+    : "  (none)";
   return `<pre style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#111;background:#fff;padding:20px;border:1px solid #eee;white-space:pre-wrap;">NEW BOOKING
 
-Business: ${p.business_name}
-Location: ${p.city}
-Industry: ${p.industry}
-Date:     ${humanDate}
-Time:     ${humanTime}
+Business: ${escapeHtml(p.business_name)}
+Location: ${escapeHtml(p.city)}
+Industry: ${escapeHtml(p.industry)}
+Date:     ${escapeHtml(humanDate)}
+Time:     ${escapeHtml(humanTime)}
 
 CONTACT
-  Name:  ${p.name}
-  Role:  ${p.role}
-  Email: ${p.email}
-  Phone: ${p.phone}
+  Name:  ${escapeHtml(p.name)}
+  Role:  ${escapeHtml(p.role)}
+  Email: ${escapeHtml(p.email)}
+  Phone: ${escapeHtml(p.phone)}
 
 SERVICES INTERESTED IN
 ${servicesList}
 
 BIGGEST CHALLENGE
-  ${p.challenge || "Not provided"}
+  ${escapeHtml(p.challenge || "Not provided")}
 
 HOW THEY FOUND US
-  ${p.referral}${p.referral === "Other" && p.referral_other ? ` — ${p.referral_other}` : ""}
+  ${escapeHtml(p.referral)}${p.referral === "Other" && p.referral_other ? ` — ${escapeHtml(p.referral_other)}` : ""}
 
 Google Calendar event created: ${calendarSucceeded ? "Yes" : "No"}
-Google Meet link: ${meetLink || "Not generated"}
+Google Meet link: ${escapeHtml(meetLink || "Not generated")}
 </pre>`;
 }
 
@@ -200,7 +275,7 @@ async function sendEmails(
   // Client confirmation — branded template
   try {
     const startLocal = toLocalISOForDay(p.date, p.time);
-    const bookingDateTime = new Date(startLocal).toISOString();
+    const bookingDateTime = torontoLocalToUTCDate(startLocal).toISOString();
     const { subject, html } = getConfirmationEmail({
       clientName: firstName(p.name),
       businessName: p.business_name,
@@ -230,11 +305,21 @@ async function sendEmails(
 /* ───────────── Route handler ───────────── */
 
 export async function POST(req: Request) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  const { success } = await ratelimit.limit(ip);
+  if (!success) {
+    return NextResponse.json({ success: false, error: "Too many requests. Please try again later." }, { status: 429 });
+  }
+
   let payload: Payload;
   try {
     payload = (await req.json()) as Payload;
   } catch {
     return NextResponse.json({ success: false, error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  if (typeof payload._hp === "string" && payload._hp.trim() !== "") {
+    return NextResponse.json({ success: true });
   }
 
   // Basic server-side validation
@@ -266,6 +351,13 @@ export async function POST(req: Request) {
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email.trim())) {
     return NextResponse.json({ success: false, error: "Invalid email address" }, { status: 400 });
+  }
+  if (
+    !ALLOWED_INDUSTRIES.includes(payload.industry) ||
+    !ALLOWED_ROLES.includes(payload.role) ||
+    !ALLOWED_REFERRAL_SOURCES.includes(payload.referral)
+  ) {
+    return NextResponse.json({ success: false, error: "Invalid selection" }, { status: 400 });
   }
 
   // Human-formatted date/time for emails & subjects
@@ -309,7 +401,7 @@ export async function POST(req: Request) {
   // reminders and the post-call follow-up.
   try {
     const startLocal = toLocalISOForDay(payload.date, payload.time);
-    const bookingDateTime = new Date(startLocal); // interpreted in server local TZ
+    const bookingDateTime = torontoLocalToUTCDate(startLocal);
     const minute = 60 * 1000;
     const booking: Booking = {
       id: randomUUID(),

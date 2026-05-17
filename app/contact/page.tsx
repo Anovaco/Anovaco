@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import React, { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format, addMonths, startOfDay } from "date-fns";
@@ -74,7 +74,6 @@ const REFERRAL_SOURCES = [
   "Other",
 ];
 
-const STEP_TITLES = ["About you", "Your goals", "Pick a time"];
 const STEP_LABELS = ["About You", "Your Goals", "Pick a Time"];
 const TOTAL_STEPS = 3;
 
@@ -134,6 +133,13 @@ export default function ContactPage() {
   const [draftSaved, setDraftSaved] = useState(false);
   const saveTimer = useRef<number | null>(null);
   const firstSaveSkipped = useRef(false);
+  const submitController = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      submitController.current?.abort();
+    };
+  }, []);
 
   /* ───────── Auto-save (localStorage, debounced) ───────── */
   useEffect(() => {
@@ -142,9 +148,16 @@ export default function ContactPage() {
       const raw = window.localStorage.getItem(DRAFT_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
+        const savedAt = typeof parsed._savedAt === "number" ? parsed._savedAt : 0;
+        if (Date.now() - savedAt > 86_400_000) {
+          window.localStorage.removeItem(DRAFT_KEY);
+          return;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { _savedAt, email, phone, ...safe } = parsed;
         setForm((f) => ({
           ...f,
-          ...parsed,
+          ...safe,
           date: parsed.date ? new Date(parsed.date) : undefined,
         }));
       }
@@ -156,9 +169,12 @@ export default function ContactPage() {
     if (saveTimer.current) window.clearTimeout(saveTimer.current);
     saveTimer.current = window.setTimeout(() => {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { email, phone, ...rest } = form;
         const serializable = {
-          ...form,
+          ...rest,
           date: form.date ? form.date.toISOString() : undefined,
+          _savedAt: Date.now(),
         };
         window.localStorage.setItem(DRAFT_KEY, JSON.stringify(serializable));
         if (firstSaveSkipped.current) {
@@ -308,20 +324,25 @@ export default function ContactPage() {
   /* ───────── Submit ───────── */
   const canSubmit = !!form.date && !!form.time;
   const handleSubmit = () => {
-    // Final validation across all steps
-    const allMissing: string[] = [];
-    for (let i = 0; i < TOTAL_STEPS; i++) allMissing.push(...validateStep(i));
+    // Final validation across all steps — compute once per step
+    const perStep: string[][] = [];
+    for (let i = 0; i < TOTAL_STEPS; i++) perStep.push(validateStep(i));
+    const allMissing = perStep.flat();
     if (allMissing.length) {
       for (let i = 0; i < TOTAL_STEPS; i++) {
-        if (validateStep(i).length) {
+        if (perStep[i].length) {
           setCurrent(i);
-          setErrors(validateStep(i));
+          setErrors(perStep[i]);
           break;
         }
       }
       return;
     }
 
+    const hpEl =
+      typeof document !== "undefined"
+        ? (document.querySelector('input[name="_hp"]') as HTMLInputElement | null)
+        : null;
     const payload = {
       business_name: form.business_name.trim(),
       city: form.city.trim(),
@@ -336,7 +357,12 @@ export default function ContactPage() {
       referral_other: form.referral_other.trim(),
       date: form.date!.toISOString(),
       time: form.time,
+      _hp: hpEl?.value || "",
     };
+
+    submitController.current?.abort();
+    const controller = new AbortController();
+    submitController.current = controller;
 
     startTransition(async () => {
       try {
@@ -344,6 +370,7 @@ export default function ContactPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
+          signal: controller.signal,
         });
         const data = await res.json();
         if (!res.ok || !data.success) {
@@ -371,6 +398,7 @@ export default function ContactPage() {
         params.set("time", payload.time);
         router.push(`/thank-you?${params.toString()}`);
       } catch (err) {
+        if ((err as { name?: string } | undefined)?.name === "AbortError") return;
         console.error(err);
         setSubmitError("Network error. Please try again.");
       }
@@ -402,7 +430,7 @@ export default function ContactPage() {
 
       <div className="contact-shell">
         {/* Left panel */}
-        <aside className="contact-left sticky top-0 h-screen overflow-y-auto">
+        <aside className="contact-left contact-left-sticky">
           <div>
             <div className="contact-rule" />
             <span className="eyebrow">Complimentary Audit</span>
@@ -471,7 +499,7 @@ export default function ContactPage() {
 
         {/* Right form panel */}
         <main className="contact-right">
-          <div className="sticky top-0 z-10 bg-[#F4F1ED] pb-4 border-b border-[#e8e4de] contact-sticky-head">
+          <div className="sticky top-[72px] z-10 bg-[#F4F1ED] pb-4 border-b border-[#e8e4de] contact-sticky-head">
           <div className="form-head">
             <h2 className="form-title">
               Book your <em>complimentary audit.</em>
@@ -507,6 +535,16 @@ export default function ContactPage() {
             </div>
           </div>
           </div>
+
+          {/* Honeypot — must remain empty */}
+          <input
+            type="text"
+            name="_hp"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+          />
 
           {/* Step panels */}
           <div className="msf-steps">
@@ -567,7 +605,7 @@ export default function ContactPage() {
           </div>
 
           <div className="msf-counter">
-            Step {current + 1} of {TOTAL_STEPS}  ·  <em>{STEP_TITLES[current]}</em>
+            Step {current + 1} of {TOTAL_STEPS}  ·  <em>{STEP_LABELS[current]}</em>
           </div>
         </main>
       </div>
@@ -664,6 +702,8 @@ function Step1({
               className={`select h-14${fieldErrors.industry ? " border-red-500" : ""}`}
               value={form.industry}
               onChange={(e) => set("industry", e.target.value)}
+              aria-invalid={fieldErrors.industry ? "true" : "false"}
+              aria-describedby={fieldErrors.industry ? "industry-error" : undefined}
             >
               <option value="">Select one…</option>
               {INDUSTRIES.map((i) => (
@@ -674,6 +714,8 @@ function Step1({
             </select>
             {fieldErrors.industry && (
               <p
+                id="industry-error"
+                role="alert"
                 className="field-error"
                 style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
               >
@@ -710,6 +752,8 @@ function Step1({
               className={`select h-14${fieldErrors.role ? " border-red-500" : ""}`}
               value={form.role}
               onChange={(e) => set("role", e.target.value)}
+              aria-invalid={fieldErrors.role ? "true" : "false"}
+              aria-describedby={fieldErrors.role ? "role-error" : undefined}
             >
               <option value="">Select one…</option>
               {ROLES.map((r) => (
@@ -720,6 +764,8 @@ function Step1({
             </select>
             {fieldErrors.role && (
               <p
+                id="role-error"
+                role="alert"
                 className="field-error"
                 style={{ color: "#ef4444", fontSize: 12, lineHeight: 1.4, margin: "6px 0 0" }}
               >
@@ -866,7 +912,11 @@ function Step3({
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
 }) {
-  const today = useMemo(() => startOfDay(new Date()), []);
+  const today = useMemo(() => {
+    const d = startOfDay(new Date());
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+    return d;
+  }, []);
   const toMonth = useMemo(() => addMonths(today, 6), [today]);
   const slots = useMemo(() => slotsForDate(form.date), [form.date]);
 
@@ -874,6 +924,7 @@ function Step3({
 
   useEffect(() => {
     const now = new Date();
+    if (now.getDay() === 0) now.setDate(now.getDate() + 1);
     const str = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     setTodayStr(str);
   }, []);
@@ -965,6 +1016,8 @@ function Step3({
           </div>
           {!form.date ? (
             <div className="time-empty">Pick a day from the calendar to see available times.</div>
+          ) : form.date.getDay() === 0 ? (
+            <p className="text-muted text-sm">We&apos;re closed on Sundays. Please select another day.</p>
           ) : slots.length === 0 ? (
             <div className="time-empty">No availability on this day — please choose another.</div>
           ) : (
@@ -1026,8 +1079,11 @@ function Field({
   children: React.ReactNode;
 }) {
   const isInvalid = !!error || errored;
+  const errorId = error && fieldName ? `${fieldName}-error` : undefined;
   const errorNode = error ? (
     <p
+      id={errorId}
+      role="alert"
       className="field-error"
       style={{
         color: "#ef4444",
@@ -1039,13 +1095,20 @@ function Field({
       {error}
     </p>
   ) : null;
+  const enhancedChildren = React.Children.map(children, (child) => {
+    if (!React.isValidElement(child)) return child;
+    return React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
+      "aria-invalid": isInvalid ? "true" : "false",
+      "aria-describedby": errorId,
+    });
+  });
   if (kind === "text") {
     return (
       <div
         data-field={fieldName}
         className={`form-field float-field${isInvalid ? " is-invalid" : ""}`}
       >
-        {children}
+        {enhancedChildren}
         <label className="float-label">
           {label}{" "}
           {required && <span className="req">*</span>}
@@ -1072,7 +1135,7 @@ function Field({
         {required && <span className="req">*</span>}
         {optional && <span className="opt">— optional</span>}
       </label>
-      {children}
+      {enhancedChildren}
       {errorNode}
     </div>
   );
