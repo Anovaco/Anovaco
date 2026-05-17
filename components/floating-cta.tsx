@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 
 // Floating "Book a Free Audit" pill — visible on all screen sizes once the
 // user scrolls past 70% of the page. Hidden on /contact and any sub-route
-// so we don't redirect users mid-booking.
+// so we don't redirect users mid-booking, and on /thank-you.
 export function FloatingCTA() {
   const pathname = usePathname();
   if (pathname === "/contact" || pathname.startsWith("/contact")) return null;
+  if (pathname === "/thank-you" || pathname.startsWith("/thank-you")) return null;
   return <FloatingCTAInner />;
 }
 
