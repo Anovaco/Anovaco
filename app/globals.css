@@ -1830,51 +1830,16 @@ section { position: relative; }
 .scroll-progress {
   position: fixed; top: 0; left: 0;
   height: 2px; background: #D4AF37;
-  z-index: 9999;
-  transition: width 50ms linear;
+  z-index: 100;
   pointer-events: none;
 }
-.floating-cta {
-  position: fixed; bottom: 32px; left: 50%;
-  transform: translateX(-50%) translateY(16px);
-  padding: 14px 28px; border-radius: 100px;
-  background: #1B2B21;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  color: #F4F1ED;
-  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
-  font-weight: 500; font-size: 13px;
-  text-decoration: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  z-index: 500;
-  opacity: 0; pointer-events: none;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: opacity 400ms ease-out, transform 400ms ease-out, background 200ms;
-}
-.floating-cta.is-visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
-}
-.floating-cta:hover { background: #2A4232; }
-.floating-cta span { transition: transform 220ms var(--ease); }
-.floating-cta:hover span { transform: translateX(4px); }
-@media (max-width: 768px) {
-  .floating-cta {
-    bottom: 80px;
-    width: calc(100% - 48px);
-    max-width: 380px;
-    justify-content: center;
-  }
-}
-
 .section-label {
-  position: fixed; left: 32px; top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
-  transform-origin: left center;
+  position: fixed; left: 2rem; top: 50%;
+  transform: translateY(-50%);
   font-family: var(--font-dm-sans), "DM Sans", sans-serif;
-  font-size: 10px; letter-spacing: 0.18em;
+  font-size: 10px; letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(27, 43, 33, 0.35);
+  color: #888880;
   white-space: nowrap;
   z-index: 200;
   pointer-events: none;
@@ -1888,7 +1853,7 @@ section { position: relative; }
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .section-label { display: block; }
 }
 
@@ -2130,5 +2095,4 @@ a.btn:active {
   }
   .intro-right { transform: rotate(-1deg) !important; }
   .page-transition { opacity: 1 !important; transform: none !important; }
-  .floating-cta.is-visible { transform: translateX(-50%) !important; }
 }

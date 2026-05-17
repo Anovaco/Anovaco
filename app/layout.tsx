@@ -3,7 +3,6 @@ import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { ScrollProgress } from "@/components/scroll-progress";
-import { FloatingCTA } from "@/components/floating-cta";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -86,7 +85,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ScrollProgress />
         {children}
-        <FloatingCTA />
         <Analytics />
       </body>
     </html>

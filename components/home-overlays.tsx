@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 const SECTIONS: { id: string; label: string }[] = [
   { id: "hero", label: "Growth" },
   { id: "problem", label: "The Problem" },
-  { id: "services", label: "What We Do" },
-  { id: "process", label: "How It Works" },
+  { id: "services", label: "Services" },
+  { id: "process", label: "Process" },
   { id: "investment", label: "Investment" },
-  { id: "testimonials", label: "Results" },
+  { id: "results", label: "Results" },
   { id: "finalCta", label: "Get Started" },
 ];
 
@@ -34,7 +34,8 @@ export function HomeOverlays() {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
-        hero.style.setProperty("--hero-bg-y", `${-y * 0.3}px`);
+        const offset = Math.max(-120, Math.min(120, -y * 0.4));
+        hero.style.setProperty("--hero-bg-y", `${offset}px`);
       });
     };
     onScroll();
@@ -50,7 +51,7 @@ export function HomeOverlays() {
   // Section labels via IntersectionObserver
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!window.matchMedia("(min-width: 1280px)").matches) return;
+    if (!window.matchMedia("(min-width: 1024px)").matches) return;
     const targets = SECTIONS.map((s) => document.getElementById(s.id)).filter(
       Boolean
     ) as HTMLElement[];

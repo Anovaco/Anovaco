@@ -374,7 +374,7 @@ function HeroStats() {
           return;
         }
         const t = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
+        const eased = 1 - Math.pow(1 - t, 4);
         setter(Math.round(eased * target));
         if (t < 1) raf = requestAnimationFrame(step);
       };
@@ -383,7 +383,7 @@ function HeroStats() {
     };
     const triggerAnimations = () => {
       animateNumber(3, 1200, setN1, 0);
-      animateNumber(40, 1400, setN2, 150);
+      animateNumber(40, 1200, setN2, 150);
       animateNumber(30, 1200, setN3, 300);
       setTimeout(() => setN4Visible(true), 450);
     };
