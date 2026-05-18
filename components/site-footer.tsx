@@ -35,6 +35,7 @@ export function SiteFooter() {
               Investment
             </Link>
             <Link href="/contact" className="foot-link">Contact</Link>
+            <Link href="/privacy" className="foot-link foot-link-fine">Privacy Policy</Link>
           </div>
         </div>
       </div>
