@@ -1,74 +1,103 @@
-import { Redis } from "@upstash/redis";
+import { sql } from "./db";
 
-export type EmailType = "reminder24h" | "reminder1h" | "followUp";
-
-export type ScheduledEmail = {
-  scheduledFor: string; // ISO timestamp
-  sent: boolean;
-};
-
-export type Booking = {
-  id: string;
-  clientName: string;       // first name only — used in templates
-  clientEmail: string;
-  businessName: string;
-  date: string;             // human-readable, e.g. "Monday, June 2 2025"
-  time: string;             // human-readable, e.g. "10:00 AM"
-  meetLink: string;
-  bookingDateTime: string;  // ISO timestamp of the call start
-  scheduledEmails: {
-    reminder24h: ScheduledEmail;
-    reminder1h: ScheduledEmail;
-    followUp: ScheduledEmail;
-  };
-};
-
-export type DueEmail = {
-  booking: Booking;
-  emailType: EmailType;
-};
-
-const kv = Redis.fromEnv();
-
-// Hash of bookingId → Booking (auto JSON-serialised by @upstash/redis)
-const BOOKINGS_KEY = "anova:bookings";
-// Sorted set of pending emails: score = ms timestamp, member = `${bookingId}|${emailType}`
-const PENDING_KEY = "anova:pending-emails";
-
-const TYPES: EmailType[] = ["reminder24h", "reminder1h", "followUp"];
-
-const memberFor = (id: string, t: EmailType) => `${id}|${t}`;
+export interface Booking {
+  id?: number;
+  name: string;
+  email: string;
+  phone?: string;
+  business_name?: string;
+  city?: string;
+  industry?: string;
+  role?: string;
+  interests?: string[];
+  challenge?: string;
+  referral?: string;
+  referral_other?: string;
+  date: string;
+  time: string;
+  meet_link?: string;
+  created_at?: string;
+}
 
 export async function addBooking(booking: Booking): Promise<void> {
-  await kv.hset(BOOKINGS_KEY, { [booking.id]: booking });
-  const [first, ...rest] = TYPES.map((t) => ({
-    score: new Date(booking.scheduledEmails[t].scheduledFor).getTime(),
-    member: memberFor(booking.id, t),
-  }));
-  await kv.zadd(PENDING_KEY, first, ...rest);
+  await sql`
+    INSERT INTO bookings (
+      name, email, phone, business_name, city, industry, role,
+      interests, challenge, referral, referral_other, date, time, meet_link
+    ) VALUES (
+      ${booking.name},
+      ${booking.email},
+      ${booking.phone ?? null},
+      ${booking.business_name ?? null},
+      ${booking.city ?? null},
+      ${booking.industry ?? null},
+      ${booking.role ?? null},
+      ${booking.interests ?? null},
+      ${booking.challenge ?? null},
+      ${booking.referral ?? null},
+      ${booking.referral_other ?? null},
+      ${booking.date},
+      ${booking.time},
+      ${booking.meet_link ?? null}
+    )
+  `;
 }
 
-export async function getPendingEmails(now: Date = new Date()): Promise<DueEmail[]> {
-  const members = (await kv.zrange(PENDING_KEY, 0, now.getTime(), { byScore: true })) as string[];
-  if (!members.length) return [];
+export async function getBookings(): Promise<Booking[]> {
+  const rows = await sql`
+    SELECT * FROM bookings ORDER BY created_at DESC
+  `;
+  return rows as Booking[];
+}
 
-  const due: DueEmail[] = [];
-  for (const raw of members) {
-    const sep = raw.lastIndexOf("|");
-    if (sep === -1) continue;
-    const bookingId = raw.slice(0, sep);
-    const emailType = raw.slice(sep + 1) as EmailType;
-    const booking = (await kv.hget(BOOKINGS_KEY, bookingId)) as Booking | null;
-    if (!booking) {
-      // Orphaned member — booking gone. Drop it so it doesn't keep matching.
-      await kv.zrem(PENDING_KEY, raw);
-      continue;
-    }
-    due.push({ booking, emailType });
+export async function getBookingByDateAndTime(
+  date: string,
+  time: string
+): Promise<Booking | null> {
+  const rows = await sql`
+    SELECT * FROM bookings WHERE date = ${date} AND time = ${time} LIMIT 1
+  `;
+  return rows.length > 0 ? (rows[0] as Booking) : null;
+}
+
+export type EmailType = "confirmation" | "reminder_24h" | "reminder_1h" | "followup";
+
+export interface ScheduledEmail {
+  id?: number;
+  booking_id: number;
+  email_type: EmailType;
+  recipient_email: string;
+  scheduled_for: string;
+  sent_at?: string | null;
+}
+
+export async function scheduleEmails(
+  bookingId: number,
+  emails: Omit<ScheduledEmail, "booking_id">[]
+): Promise<void> {
+  for (const email of emails) {
+    await sql`
+      INSERT INTO scheduled_emails (booking_id, email_type, recipient_email, scheduled_for)
+      VALUES (${bookingId}, ${email.email_type}, ${email.recipient_email}, ${email.scheduled_for})
+    `;
   }
-  return due;
 }
 
-export async function markEmailSent(bookingId: string, emailType: EmailType): Promise<void> {
-  await kv.zrem(PENDING_KEY, memberFor(bookingId, emailType));
+export async function getPendingEmails(): Promise<(ScheduledEmail & { id: number })[]> {
+  const rows = await sql`
+    SELECT se.*, b.name, b.email, b.date, b.time, b.meet_link, b.business_name
+    FROM scheduled_emails se
+    JOIN bookings b ON se.booking_id = b.id
+    WHERE se.sent_at IS NULL
+    AND se.scheduled_for <= NOW()
+    ORDER BY se.scheduled_for ASC
+    LIMIT 50
+  `;
+  return rows as (ScheduledEmail & { id: number })[];
+}
+
+export async function markEmailSent(emailId: number): Promise<void> {
+  await sql`
+    UPDATE scheduled_emails SET sent_at = NOW() WHERE id = ${emailId}
+  `;
 }

@@ -3,7 +3,8 @@ import { google } from "googleapis";
 import { Resend } from "resend";
 import { randomUUID } from "crypto";
 import { format } from "date-fns";
-import { addBooking, type Booking } from "@/lib/bookings-store";
+import { addBooking, scheduleEmails, type Booking } from "@/lib/bookings-store";
+import { sql } from "@/lib/db";
 import { getConfirmationEmail } from "@/lib/email-templates";
 import { isSlotTaken } from "@/lib/google-calendar";
 import { Redis } from "@upstash/redis";
@@ -397,39 +398,55 @@ export async function POST(req: Request) {
   // Emails
   await sendEmails(payload, meetLink, humanDate, humanTime, calendarSucceeded);
 
-  // Persist booking + scheduled email timestamps so the cron job can send
-  // reminders and the post-call follow-up.
+  // Persist booking to Neon Postgres
   try {
-    const startLocal = toLocalISOForDay(payload.date, payload.time);
-    const bookingDateTime = torontoLocalToUTCDate(startLocal);
-    const minute = 60 * 1000;
     const booking: Booking = {
-      id: randomUUID(),
-      clientName: firstName(payload.name),
-      clientEmail: payload.email,
-      businessName: payload.business_name,
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      business_name: payload.business_name,
+      city: payload.city,
+      industry: payload.industry,
+      role: payload.role,
+      interests: payload.interests,
+      challenge: payload.challenge,
+      referral: payload.referral,
+      referral_other: payload.referral_other,
       date: humanDate,
       time: humanTime,
-      meetLink,
-      bookingDateTime: bookingDateTime.toISOString(),
-      scheduledEmails: {
-        reminder24h: {
-          scheduledFor: new Date(bookingDateTime.getTime() - 24 * 60 * minute).toISOString(),
-          sent: false,
-        },
-        reminder1h: {
-          scheduledFor: new Date(bookingDateTime.getTime() - 60 * minute).toISOString(),
-          sent: false,
-        },
-        followUp: {
-          scheduledFor: new Date(bookingDateTime.getTime() + 90 * minute).toISOString(),
-          sent: false,
-        },
-      },
+      meet_link: meetLink,
     };
     await addBooking(booking);
+
+    const [newBooking] = await sql`
+      SELECT id FROM bookings
+      WHERE email = ${payload.email} AND date = ${humanDate} AND time = ${humanTime}
+      ORDER BY created_at DESC LIMIT 1
+    ` as { id: number }[];
+
+    if (newBooking?.id) {
+      const startLocal = toLocalISOForDay(payload.date, payload.time);
+      const bookingTime = torontoLocalToUTCDate(startLocal);
+      await scheduleEmails(newBooking.id, [
+        {
+          email_type: "reminder_24h",
+          recipient_email: payload.email,
+          scheduled_for: new Date(bookingTime.getTime() - 24 * 60 * 60 * 1000).toISOString(),
+        },
+        {
+          email_type: "reminder_1h",
+          recipient_email: payload.email,
+          scheduled_for: new Date(bookingTime.getTime() - 60 * 60 * 1000).toISOString(),
+        },
+        {
+          email_type: "followup",
+          recipient_email: payload.email,
+          scheduled_for: new Date(bookingTime.getTime() + 60 * 60 * 1000).toISOString(),
+        },
+      ]);
+    }
   } catch (err) {
-    console.error("[book] Failed to persist booking for scheduled emails:", err);
+    console.error("[book] Failed to persist booking:", err);
   }
 
   return NextResponse.json({

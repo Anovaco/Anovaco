@@ -9,6 +9,7 @@ import {
   getReminderEmail24h,
   getReminderEmail1h,
   getFollowUpEmail,
+  getConfirmationEmail,
   type RenderedEmail,
   type EmailData,
 } from "@/lib/email-templates";
@@ -18,11 +19,40 @@ export const dynamic = "force-dynamic";
 
 const FROM = "Anova Co. <ano@anovaco.ca>";
 
+function firstName(full: string): string {
+  return (full || "").trim().split(/\s+/)[0] || "there";
+}
+
 function render(emailType: EmailType, data: EmailData): RenderedEmail {
-  if (emailType === "reminder24h") return getReminderEmail24h(data);
-  if (emailType === "reminder1h") return getReminderEmail1h(data);
+  if (emailType === "confirmation") return getConfirmationEmail(data);
+  if (emailType === "reminder_24h") return getReminderEmail24h(data);
+  if (emailType === "reminder_1h") return getReminderEmail1h(data);
   return getFollowUpEmail(data);
 }
+
+// Reconstruct booking start time from scheduled_for + email-type offset.
+function bookingDateTimeFor(emailType: EmailType, scheduledFor: string): string {
+  const t = new Date(scheduledFor).getTime();
+  if (emailType === "reminder_24h") return new Date(t + 24 * 60 * 60 * 1000).toISOString();
+  if (emailType === "reminder_1h") return new Date(t + 60 * 60 * 1000).toISOString();
+  if (emailType === "followup") return new Date(t - 60 * 60 * 1000).toISOString();
+  return new Date(t).toISOString();
+}
+
+type PendingRow = {
+  id: number;
+  booking_id: number;
+  email_type: EmailType;
+  recipient_email: string;
+  scheduled_for: string;
+  sent_at: string | null;
+  name?: string;
+  email?: string;
+  date?: string;
+  time?: string;
+  meet_link?: string | null;
+  business_name?: string | null;
+};
 
 async function handle(req: Request) {
   const secret = req.headers.get("x-cron-secret");
@@ -39,36 +69,36 @@ async function handle(req: Request) {
   }
   const resend = new Resend(apiKey);
 
-  const due = await getPendingEmails();
-  const results: { id: string; type: EmailType; ok: boolean; error?: string }[] = [];
+  const due = (await getPendingEmails()) as unknown as PendingRow[];
+  const results: { id: number; type: EmailType; ok: boolean; error?: string }[] = [];
 
-  for (const { booking, emailType } of due) {
+  for (const row of due) {
     const data: EmailData = {
-      clientName: booking.clientName,
-      businessName: booking.businessName,
-      date: booking.date,
-      time: booking.time,
-      meetLink: booking.meetLink,
-      bookingDateTime: booking.bookingDateTime,
+      clientName: firstName(row.name ?? ""),
+      businessName: row.business_name ?? "",
+      date: row.date ?? "",
+      time: row.time ?? "",
+      meetLink: row.meet_link ?? "",
+      bookingDateTime: bookingDateTimeFor(row.email_type, row.scheduled_for),
     };
-    const { subject, html } = render(emailType, data);
+    const { subject, html } = render(row.email_type, data);
     try {
       const { error } = await resend.emails.send({
         from: FROM,
-        to: booking.clientEmail,
+        to: row.recipient_email,
         subject,
         html,
       });
       if (error) {
-        results.push({ id: booking.id, type: emailType, ok: false, error: String(error) });
+        results.push({ id: row.id, type: row.email_type, ok: false, error: String(error) });
         continue;
       }
-      await markEmailSent(booking.id, emailType);
-      results.push({ id: booking.id, type: emailType, ok: true });
+      await markEmailSent(row.id);
+      results.push({ id: row.id, type: row.email_type, ok: true });
     } catch (err) {
       results.push({
-        id: booking.id,
-        type: emailType,
+        id: row.id,
+        type: row.email_type,
         ok: false,
         error: err instanceof Error ? err.message : String(err),
       });
