@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Service = {
   num: string;
@@ -88,6 +88,18 @@ export function ServiceCarousel() {
     [],
   );
 
+  const swipeStartX = useRef<number | null>(null);
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    swipeStartX.current = e.clientX;
+  };
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (swipeStartX.current === null) return;
+    const dx = swipeStartX.current - e.clientX;
+    if (dx > 50) next();
+    else if (dx < -50) prev();
+    swipeStartX.current = null;
+  };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") next();
@@ -112,6 +124,8 @@ export function ServiceCarousel() {
             animate="center"
             exit="exit"
             transition={{ duration: 0.45, ease: "easeInOut" }}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
           >
             <div className="svc-card-left">
               <div className="svc-num">{s.num}</div>

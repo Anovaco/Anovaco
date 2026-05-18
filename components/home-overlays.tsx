@@ -26,25 +26,38 @@ export function HomeOverlays() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     let raf = 0;
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    if (isMobile || reduced) return;
     const hero = document.getElementById("hero");
     if (!hero) return;
+    if (reduced) {
+      hero.style.setProperty("--hero-bg-y", "0px");
+      return;
+    }
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
+        if (window.innerWidth <= 768) {
+          hero.style.setProperty("--hero-bg-y", "0px");
+          return;
+        }
         const y = window.scrollY;
         const offset = Math.max(-120, Math.min(120, -y * 0.4));
         hero.style.setProperty("--hero-bg-y", `${offset}px`);
       });
     };
-    onScroll();
+    const onResize = () => {
+      if (window.innerWidth <= 768) {
+        hero.style.setProperty("--hero-bg-y", "0px");
+      } else {
+        onScroll();
+      }
+    };
+    onResize();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, [reduced]);
 

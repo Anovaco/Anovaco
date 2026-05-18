@@ -540,6 +540,7 @@ export default function ContactPage() {
           <input
             type="text"
             name="_hp"
+            inputMode="none"
             tabIndex={-1}
             autoComplete="off"
             aria-hidden="true"
@@ -638,7 +639,7 @@ function Step1({
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch mb-3">
         <div>
           <div className="h-5 mb-1" />
           <Field
@@ -675,7 +676,7 @@ function Step1({
           </Field>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch mb-3">
         <div>
           <div className="h-5 mb-1" />
           <Field
@@ -725,7 +726,7 @@ function Step1({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch mb-3">
         <div>
           <div className="h-5 mb-1" />
           <Field
@@ -775,7 +776,7 @@ function Step1({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 items-stretch mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch mb-3">
         <div>
           <div className="h-5 mb-1" />
           <Field

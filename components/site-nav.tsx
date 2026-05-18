@@ -21,7 +21,11 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
     const onScroll = () => {
       setScrolled(window.scrollY > 32);
       const hero = document.getElementById("hero");
-      const heroBottom = hero ? hero.offsetTop + hero.offsetHeight - 60 : 800;
+      if (!hero) {
+        setOnDark(false);
+        return;
+      }
+      const heroBottom = hero.offsetTop + hero.offsetHeight - 60;
       setOnDark(window.scrollY < heroBottom);
     };
     onScroll();
@@ -156,7 +160,7 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
           transition: "transform 320ms cubic-bezier(0.22, 1, 0.36, 1)",
           display: "flex",
           flexDirection: "column",
-          padding: "22px 28px 32px",
+          padding: "22px 28px max(32px, env(safe-area-inset-bottom))",
           boxShadow: "-24px 0 60px -20px rgba(13, 22, 16, 0.55)",
         }}
       >
@@ -170,7 +174,9 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
               border: 0,
               color: "#D4AF37",
               cursor: "pointer",
-              padding: 8,
+              padding: 11,
+              minWidth: 44,
+              minHeight: 44,
             }}
           >
             <X size={22} strokeWidth={1.3} />

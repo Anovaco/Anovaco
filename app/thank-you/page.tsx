@@ -153,7 +153,30 @@ function buildGoogleCalendarUrl(parts: TimeParts, meetLink: string): string {
 
 export default function ThankYouPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: "100svh",
+            background: "#F4F1ED",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              width: 40,
+              height: 40,
+              border: "2px solid #D4AF37",
+              borderTopColor: "transparent",
+              borderRadius: "50%",
+              animation: "spin 0.8s linear infinite",
+            }}
+          />
+        </div>
+      }
+    >
       <ThankYouContent />
     </Suspense>
   );
@@ -227,7 +250,7 @@ function ThankYouContent() {
           left: 0,
           right: 0,
           zIndex: 60,
-          padding: "22px 44px",
+          padding: "16px clamp(16px, 5vw, 44px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
