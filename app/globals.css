@@ -1207,6 +1207,13 @@ section { position: relative; }
   .contact-nav-l { justify-content: space-between; }
   .contact-nav-l .back-link { color: rgba(244, 241, 237, 0.85); }
 }
+@media (max-width: 768px) {
+  .contact-sticky-head {
+    position: relative !important;
+    top: auto !important;
+    z-index: auto !important;
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    THANK YOU
