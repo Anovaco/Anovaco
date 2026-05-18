@@ -21,17 +21,17 @@ const playfair = Playfair_Display({
 
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://anovaco.ca";
 const OG_DESCRIPTION =
-  "AI-powered digital growth agency. Custom AI Systems, websites, SEO, ads, and reputation management for local businesses.";
+  "Anova Co. helps growing businesses build the systems, presence, and strategy they need to compete and win.";
 
 export const metadata: Metadata = {
-  title: "Anova Co. | AI-Powered Digital Growth Agency",
+  title: "Anova Co. | Business Solutions Consulting Firm",
   description: OG_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   icons: {
     icon: "/icon.svg",
   },
   openGraph: {
-    title: "Anova Co. | AI-Powered Digital Growth Agency",
+    title: "Anova Co. | Business Solutions Consulting Firm",
     description: OG_DESCRIPTION,
     url: SITE_URL,
     siteName: "Anova Co.",
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Anova Co. | AI-Powered Digital Growth Agency",
+        alt: "Anova Co. | Business Solutions Consulting Firm",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anova Co. | AI-Powered Digital Growth Agency",
+    title: "Anova Co. | Business Solutions Consulting Firm",
     description: OG_DESCRIPTION,
     images: ["/og-image.png"],
   },
@@ -58,11 +58,11 @@ const localBusinessJsonLd = {
   "@type": "LocalBusiness",
   name: "Anova Co.",
   description:
-    "AI-powered digital growth agency helping local service businesses grow through AI automation, web design, Google & Meta Ads, SEO, social media management, and reputation management.",
+    "Anova Co. helps growing businesses build the systems, presence, and strategy they need to compete and win.",
   url: "https://anovaco.ca",
   email: "ano@anovaco.ca",
   serviceType: [
-    "AI Automation",
+    "Automation & Systems",
     "Website Design",
     "Google Ads",
     "Meta Ads",

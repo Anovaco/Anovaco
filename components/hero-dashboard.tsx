@@ -68,9 +68,9 @@ export function HeroDashboard() {
           </div>
         </div>
 
-        {/* WIDGET 3 — AI Automation */}
+        {/* WIDGET 3 — Automation & Systems */}
         <div className="hd-widget">
-          <div className="hd-label">Leads Captured (AI)</div>
+          <div className="hd-label">Leads Captured</div>
           <div className="hd-num">147</div>
           <div className="hd-sub">This month · 24/7 automated</div>
           <div className="hd-dots" aria-hidden="true">

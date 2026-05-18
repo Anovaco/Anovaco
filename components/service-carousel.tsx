@@ -15,10 +15,10 @@ type Service = {
 const SERVICES: Service[] = [
   {
     num: "01",
-    name: "AI Automation",
-    hook: "While you're working, your AI handles everything.",
+    name: "Automation & Systems",
+    hook: "The right systems running behind your business, 24/7.",
     body:
-      "Voice AI, Chat AI, and AI Agents work in concert across every channel your customers use — booking appointments, answering questions, and following up automatically. The system never sleeps and never misses a lead. Every build is bespoke to how your business actually runs.",
+      "Most businesses lose revenue because the right systems aren't in place. Calls go unanswered, leads go cold, and follow-ups never happen. We build the automation infrastructure that keeps your business running around the clock — booking systems, lead follow-up, review requests, and client communication, all handled without manual effort from you.",
   },
   {
     num: "02",

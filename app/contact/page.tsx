@@ -58,7 +58,7 @@ const INDUSTRIES = [
 ];
 const ROLES = ["Owner", "Co-owner / Partner", "General Manager", "Marketing Manager", "Other"];
 const INTERESTS = [
-  "AI Automation",
+  "Automation & Systems",
   "Website Design & Build",
   "Google & Meta Ads",
   "Local SEO",

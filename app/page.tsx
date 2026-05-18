@@ -37,7 +37,7 @@ export default function HomePage() {
         <div className="hero-top">
           <span className="hero-pill intro-pill">
             <span className="dot" />
-            AI-Powered Growth Agency
+            Business Solutions Consulting
           </span>
           <div className="hero-meta"></div>
         </div>
@@ -53,8 +53,8 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="hero-body intro-body">
-              Anova Co. helps local businesses dominate online through smart digital strategy,
-              AI automation, and hands-on execution that drives real revenue.
+              Anova Co. helps growing businesses build the systems, presence, and strategy they
+              need to compete and win.
             </p>
             <div className="hero-ctas intro-ctas">
               <Link href="/contact" className="btn btn-gold">
@@ -82,7 +82,7 @@ export default function HomePage() {
         <div className="ticker-track">
           {[0, 1].map((k) => (
             <div key={k} className="ticker-item">
-              <span className="ticker-text">AI Automation</span>
+              <span className="ticker-text">Automation & Systems</span>
               <span className="ticker-diamond" />
               <span className="ticker-text">Website Design</span>
               <span className="ticker-diamond" />
@@ -455,7 +455,7 @@ function HeroStats() {
         <div className="hero-stat-num">
           24<em>/</em>7
         </div>
-        <div className="hero-stat-label">AI automation</div>
+        <div className="hero-stat-label">Business automation</div>
       </div>
     </div>
   );

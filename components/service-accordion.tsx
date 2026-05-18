@@ -17,7 +17,7 @@ const SERVICES: Service[] = [
   {
     id: "ai",
     num: "01",
-    name: "AI Automation",
+    name: "Automation & Systems",
     hook: "While you're working, your AI handles everything.",
     paragraphs: [
       "Most businesses lose revenue every day because humans can't be everywhere at once. Calls go unanswered. Messages sit unread. Leads go cold because no one followed up fast enough.",
