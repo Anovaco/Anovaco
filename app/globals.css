@@ -2245,31 +2245,95 @@ a.btn:active {
 .svc-pill:hover { box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4); }
 .svc-pill:focus-visible { outline: 2px solid #F4F1ED; outline-offset: 2px; }
 
+/* Desktop: actions wrapper is invisible so arrows behave as positioned children of the stage. */
+.svc-actions { display: contents; }
+
 @media (max-width: 768px) {
-  .svc-stage { min-height: auto; }
+  .svc-stage {
+    display: block;
+    position: relative;
+    min-height: 100svh;
+    padding: 6rem 1.5rem 2.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
   .svc-card {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 64px 24px 96px;
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    gap: 0;
+    padding: 0;
     min-height: auto;
   }
-  .svc-num { font-size: clamp(4rem, 18vw, 7rem); }
-  .svc-card-right { max-width: none; margin-left: 0; }
-  .svc-arrow {
-    top: auto;
-    bottom: 28px;
-    transform: none;
+  .svc-card-left,
+  .svc-card-right {
+    display: contents;
   }
-  .svc-arrow-left { left: 50%; margin-left: -56px; }
-  .svc-arrow-right { right: 50%; margin-right: -56px; }
-  .svc-dots { display: none; }
+  .svc-num {
+    font-size: 5rem;
+    line-height: 1;
+    opacity: 0.5;
+    margin: 0 0 0.5rem;
+    order: 1;
+  }
+  .svc-name {
+    font-size: 2.25rem;
+    line-height: 1.1;
+    margin: 0 0 0.75rem;
+    order: 2;
+  }
+  .svc-hook {
+    font-size: 1rem;
+    margin: 0 0 1.5rem;
+    max-width: none;
+    order: 3;
+  }
+  .svc-rule {
+    width: 3rem;
+    height: 1px;
+    margin: 0 0 1.5rem;
+    order: 4;
+  }
+  .svc-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    margin: 0 0 1rem;
+    order: 5;
+  }
+  .svc-body {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: rgba(244, 241, 237, 0.75);
+    margin: 0 0 2rem;
+    max-width: none;
+    order: 6;
+  }
+  .svc-card-right { max-width: none; margin-left: 0; }
   .svc-pill {
     position: relative;
     display: block;
-    width: max-content;
+    width: fit-content;
+    top: auto;
     bottom: auto;
     left: auto;
+    right: auto;
     transform: none;
-    margin: 2rem auto 0;
+    margin: 0 auto 1.5rem;
   }
+  .svc-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .svc-arrow {
+    position: static;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    transform: none;
+    margin: 0;
+  }
+  .svc-dots { display: none; }
 }

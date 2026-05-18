@@ -103,15 +103,6 @@ export function ServiceCarousel() {
   return (
     <div className="svc-carousel">
       <div className="svc-stage">
-        <button
-          type="button"
-          className="svc-arrow svc-arrow-left"
-          aria-label="Previous service"
-          onClick={prev}
-        >
-          <ChevronLeft size={22} strokeWidth={1.6} />
-        </button>
-
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={s.num}
@@ -141,14 +132,24 @@ export function ServiceCarousel() {
           Book a Free Audit <span aria-hidden="true">→</span>
         </Link>
 
-        <button
-          type="button"
-          className="svc-arrow svc-arrow-right"
-          aria-label="Next service"
-          onClick={next}
-        >
-          <ChevronRight size={22} strokeWidth={1.6} />
-        </button>
+        <div className="svc-actions">
+          <button
+            type="button"
+            className="svc-arrow svc-arrow-left"
+            aria-label="Previous service"
+            onClick={prev}
+          >
+            <ChevronLeft size={22} strokeWidth={1.6} />
+          </button>
+          <button
+            type="button"
+            className="svc-arrow svc-arrow-right"
+            aria-label="Next service"
+            onClick={next}
+          >
+            <ChevronRight size={22} strokeWidth={1.6} />
+          </button>
+        </div>
 
         <div className="svc-dots" role="tablist" aria-label="Service slides">
           {SERVICES.map((item, i) => (
