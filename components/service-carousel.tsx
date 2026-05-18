@@ -88,11 +88,29 @@ export function ServiceCarousel() {
     [],
   );
 
+  const handlePrev = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    prev();
+  };
+  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    next();
+  };
+
   const swipeStartX = useRef<number | null>(null);
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     swipeStartX.current = e.clientX;
   };
   const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const target = e.target as Element | null;
+    if (
+      target instanceof HTMLButtonElement ||
+      target?.closest("button") ||
+      target?.closest("a")
+    ) {
+      swipeStartX.current = null;
+      return;
+    }
     if (swipeStartX.current === null) return;
     const dx = swipeStartX.current - e.clientX;
     if (dx > 50) next();
@@ -109,74 +127,93 @@ export function ServiceCarousel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
+  useEffect(() => {
+    const handler = () => {
+      setTimeout(() => {
+        setIndex((prev) => prev);
+      }, 150);
+    };
+    window.addEventListener("orientationchange", handler);
+    screen.orientation?.addEventListener("change", handler);
+    return () => {
+      window.removeEventListener("orientationchange", handler);
+      screen.orientation?.removeEventListener("change", handler);
+    };
+  }, []);
+
   const s = SERVICES[index];
   const activeVariants = reduced ? reducedVariants : variants;
 
   return (
     <div className="svc-carousel">
       <div className="svc-stage">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={s.num}
-            className="svc-card"
-            variants={activeVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.45, ease: "easeInOut" }}
-            onPointerDown={onPointerDown}
-            onPointerUp={onPointerUp}
-          >
-            <div className="svc-card-left">
-              <div className="svc-num">{s.num}</div>
-              <h3 className="svc-name">{s.name}</h3>
-              <p className="svc-hook">{s.hook}</p>
+        <div className="svc-card">
+          <div className="svc-slide-wrap">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={s.num}
+                className="svc-slide"
+                variants={activeVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.45, ease: "easeInOut" }}
+                onPointerDown={onPointerDown}
+                onPointerUp={onPointerUp}
+              >
+                <div className="svc-slide-left">
+                  <div className="svc-num">{s.num}</div>
+                  <h3 className="svc-name">{s.name}</h3>
+                  <p className="svc-hook">{s.hook}</p>
+                </div>
+                <div className="svc-slide-right">
+                  <span className="svc-eyebrow">
+                    {s.num} — {s.name.toUpperCase()}
+                  </span>
+                  <div className="svc-rule" aria-hidden="true" />
+                  <p className="svc-body">{s.body}</p>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="svc-controls">
+            <Link href="/contact" className="svc-pill">
+              Book a Free Audit <span aria-hidden="true">→</span>
+            </Link>
+            <div className="svc-actions">
+              <button
+                type="button"
+                className="svc-arrow svc-arrow-left"
+                aria-label="Previous service"
+                onClick={handlePrev}
+              >
+                <ChevronLeft size={22} strokeWidth={1.6} />
+              </button>
+              <button
+                type="button"
+                className="svc-arrow svc-arrow-right"
+                aria-label="Next service"
+                onClick={handleNext}
+              >
+                <ChevronRight size={22} strokeWidth={1.6} />
+              </button>
             </div>
-            <div className="svc-card-right">
-              <span className="svc-eyebrow">
-                {s.num} — {s.name.toUpperCase()}
-              </span>
-              <div className="svc-rule" aria-hidden="true" />
-              <p className="svc-body">{s.body}</p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+          </div>
 
-        <Link href="/contact" className="svc-pill">
-          Book a Free Audit <span aria-hidden="true">→</span>
-        </Link>
-
-        <div className="svc-actions">
-          <button
-            type="button"
-            className="svc-arrow svc-arrow-left"
-            aria-label="Previous service"
-            onClick={prev}
-          >
-            <ChevronLeft size={22} strokeWidth={1.6} />
-          </button>
-          <button
-            type="button"
-            className="svc-arrow svc-arrow-right"
-            aria-label="Next service"
-            onClick={next}
-          >
-            <ChevronRight size={22} strokeWidth={1.6} />
-          </button>
-        </div>
-
-        <div className="svc-dots" role="tablist" aria-label="Service slides">
-          {SERVICES.map((item, i) => (
-            <button
-              key={item.num}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`Go to ${item.name}`}
-              className={`svc-dot${i === index ? " is-active" : ""}`}
-              onClick={() => setIndex(i)}
-            />
-          ))}
+          <div className="svc-dots" role="tablist" aria-label="Service slides">
+            {SERVICES.map((item, i) => (
+              <button
+                key={item.num}
+                type="button"
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`Go to ${item.name}`}
+                className={`svc-dot${i === index ? " is-active" : ""}`}
+                onClick={() => setIndex(i)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

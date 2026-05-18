@@ -2201,20 +2201,31 @@ a.btn:active {
   border-radius: 0;
   background: #1B2B21;
   min-height: 85vh;
-  overflow: hidden;
+  overflow: visible;
+  pointer-events: auto;
 }
 .svc-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
+  position: relative;
   min-height: 85vh;
-  align-items: center;
   padding: 80px 96px;
+  pointer-events: auto;
+}
+.svc-slide-wrap {
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
 }
-.svc-card-left { display: flex; flex-direction: column; gap: 18px; }
+.svc-slide { pointer-events: auto; }
+.svc-slide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: center;
+}
+.svc-slide-left { display: flex; flex-direction: column; gap: 18px; }
 .svc-num {
   font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
   font-style: italic;
@@ -2243,7 +2254,7 @@ a.btn:active {
   margin: 0;
   max-width: 28ch;
 }
-.svc-card-right {
+.svc-slide-right {
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -2267,6 +2278,10 @@ a.btn:active {
   font-weight: 300;
   margin: 0;
 }
+/* Desktop: controls wrapper is invisible so pill and arrows behave as absolutely-positioned children of .svc-card */
+.svc-controls { display: contents; }
+.svc-actions { display: contents; }
+
 .svc-arrow {
   position: absolute;
   top: 50%;
@@ -2281,7 +2296,8 @@ a.btn:active {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 2;
+  z-index: 30;
+  pointer-events: auto;
   transition: background-color 200ms ease, transform 200ms ease;
 }
 .svc-arrow:hover { background: #F4F1ED; }
@@ -2296,7 +2312,8 @@ a.btn:active {
   display: flex;
   justify-content: center;
   gap: 8px;
-  z-index: 3;
+  z-index: 25;
+  pointer-events: auto;
 }
 .svc-dot {
   width: 8px;
@@ -2327,14 +2344,12 @@ a.btn:active {
   text-transform: uppercase;
   text-decoration: none;
   border-radius: 999px;
-  z-index: 3;
+  z-index: 30;
+  pointer-events: auto;
   transition: box-shadow 200ms ease;
 }
 .svc-pill:hover { box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4); }
 .svc-pill:focus-visible { outline: 2px solid #F4F1ED; outline-offset: 2px; }
-
-/* Desktop: actions wrapper is invisible so arrows behave as positioned children of the stage. */
-.svc-actions { display: contents; }
 
 @media (max-width: 768px) {
   .svc-stage {
@@ -2342,20 +2357,33 @@ a.btn:active {
     position: relative;
     min-height: 100vh;
     min-height: 100svh;
-    padding: 6rem 1.5rem calc(2.5rem + env(safe-area-inset-bottom));
+    padding: 0;
     overflow-x: hidden;
     overflow-y: auto;
   }
   .svc-card {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 5rem 1.5rem 0;
+  }
+  .svc-slide-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .svc-slide {
+    display: flex;
+    flex-direction: column;
     grid-template-columns: none;
     gap: 0;
     padding: 0;
-    min-height: auto;
   }
-  .svc-card-left,
-  .svc-card-right {
+  .svc-slide-left,
+  .svc-slide-right {
     display: contents;
   }
   .svc-num {
@@ -2397,28 +2425,34 @@ a.btn:active {
     max-width: none;
     order: 6;
   }
-  .svc-card-right { max-width: none; margin-left: 0; }
+  .svc-slide-right { max-width: none; margin-left: 0; }
+  .svc-controls {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
   .svc-pill {
     position: relative;
-    display: block;
+    display: inline-flex;
     width: fit-content;
     top: auto;
     bottom: auto;
     left: auto;
     right: auto;
     transform: none;
-    padding-top: 14px;
-    padding-bottom: 14px;
-    margin: 0 auto 1.5rem;
+    padding: 14px 32px;
+    margin: 0;
   }
   .svc-actions {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-bottom: 2rem;
   }
   .svc-arrow {
-    position: static;
+    position: relative;
     top: auto;
     bottom: auto;
     left: auto;
