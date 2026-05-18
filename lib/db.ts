@@ -13,11 +13,11 @@ export function getDb(): NeonQueryFunction<false, false> {
   return _sql;
 }
 
-export const sql = new Proxy(((..._a: unknown[]) => undefined) as unknown as NeonQueryFunction<false, false>, {
+export const sql = new Proxy((() => undefined as unknown) as unknown as NeonQueryFunction<false, false>, {
   get(_target, prop) {
     return getDb()[prop as keyof NeonQueryFunction<false, false>];
   },
   apply(_target, _thisArg, args) {
-    return (getDb() as unknown as Function)(...args);
+    return (getDb() as unknown as (...args: unknown[]) => unknown)(...args);
   },
 });
