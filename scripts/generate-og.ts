@@ -48,8 +48,16 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${
   <!-- Gold divider line, 48x1, centered, 24px below CO. -->
   <line x1="576" y1="418" x2="624" y2="418" stroke="#D4AF37" stroke-width="1" />
 
+  <!-- Descriptor line (11px, weight 400, 0.25em tracking, uppercase) -->
+  <text x="600" y="446"
+        font-family="Helvetica, Arial, sans-serif"
+        font-size="11" font-weight="400"
+        letter-spacing="2.75"
+        fill="rgba(244,241,237,0.55)"
+        text-anchor="middle">BUSINESS SOLUTIONS CONSULTING</text>
+
   <!-- Tagline (18px, weight 300, 0.2em tracking, uppercase, canvas/50%) -->
-  <text x="600" y="460"
+  <text x="600" y="486"
         font-family="Helvetica, Arial, sans-serif"
         font-size="18" font-weight="300"
         letter-spacing="3.6"
