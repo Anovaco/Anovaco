@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { AnovaLogo } from "./anova-logo";
 import { scrollToAnchor } from "@/lib/scroll-to-anchor";
+import { SERVICES } from "@/lib/services";
 
 interface SiteNavProps {
   /** If true, the nav stays in the "light" variant regardless of scroll (used on sub-pages). */
@@ -15,6 +16,10 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [onDark, setOnDark] = useState(!forceLight);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const servicesWrapRef = useRef<HTMLDivElement | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (forceLight) return;
@@ -59,6 +64,35 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
     };
   }, [drawerOpen]);
 
+  // Close services dropdown on outside click + Escape
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!servicesWrapRef.current) return;
+      if (!servicesWrapRef.current.contains(e.target as Node)) {
+        setServicesOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setServicesOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [servicesOpen]);
+
+  const openServices = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setServicesOpen(true);
+  };
+  const scheduleCloseServices = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setServicesOpen(false), 140);
+  };
+
   const cls = [
     scrolled ? "scrolled" : "",
     forceLight ? "on-light" : onDark ? "on-dark" : "on-light",
@@ -66,7 +100,10 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
     .filter(Boolean)
     .join(" ");
 
-  const closeDrawer = () => setDrawerOpen(false);
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    setMobileServicesOpen(false);
+  };
 
   return (
     <>
@@ -79,13 +116,57 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
         </Link>
 
         <div className="nav-links">
-          <Link
-            href="/#services"
-            className="nav-link"
-            onClick={(e) => { if (scrollToAnchor("/#services")) e.preventDefault(); }}
+          <div
+            className="nav-services-wrap"
+            ref={servicesWrapRef}
+            onMouseEnter={openServices}
+            onMouseLeave={scheduleCloseServices}
           >
-            Services
-          </Link>
+            <button
+              type="button"
+              className="nav-link nav-link-trigger"
+              aria-haspopup="menu"
+              aria-expanded={servicesOpen}
+              aria-controls="nav-services-menu"
+              onClick={() => setServicesOpen((v) => !v)}
+              onFocus={openServices}
+            >
+              Services
+              <ChevronDown
+                size={12}
+                strokeWidth={1.6}
+                aria-hidden="true"
+                className="nav-link-chevron"
+                style={{
+                  transform: servicesOpen ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+              />
+            </button>
+
+            <div
+              id="nav-services-menu"
+              role="menu"
+              aria-label="Services"
+              className="nav-dropdown"
+              data-open={servicesOpen ? "true" : "false"}
+              onMouseEnter={openServices}
+              onMouseLeave={scheduleCloseServices}
+            >
+              {SERVICES.map((s) => (
+                <Link
+                  key={s.slug}
+                  href={`/services/${s.slug}`}
+                  role="menuitem"
+                  className="nav-dropdown-item"
+                  onClick={() => setServicesOpen(false)}
+                >
+                  <span className="nav-dropdown-num" aria-hidden="true">{s.num}</span>
+                  <span className="nav-dropdown-name">{s.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
           <span className="nav-sep" aria-hidden="true">·</span>
           <Link
             href="/#process"
@@ -162,6 +243,7 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
           flexDirection: "column",
           padding: "22px 28px max(32px, env(safe-area-inset-bottom))",
           boxShadow: "-24px 0 60px -20px rgba(13, 22, 16, 0.55)",
+          overflowY: "auto",
         }}
       >
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -192,8 +274,49 @@ export function SiteNav({ forceLight = false }: SiteNavProps) {
             marginTop: 24,
           }}
         >
+          {/* Services accordion */}
+          <div className="mobile-nav-accordion">
+            <button
+              type="button"
+              className="mobile-nav-accordion-trigger"
+              aria-expanded={mobileServicesOpen}
+              aria-controls="mobile-services-list"
+              onClick={() => setMobileServicesOpen((v) => !v)}
+            >
+              <span>Services</span>
+              <ChevronDown
+                size={16}
+                strokeWidth={1.4}
+                aria-hidden="true"
+                style={{
+                  transform: mobileServicesOpen ? "rotate(180deg)" : "rotate(0deg)",
+                  transition: "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  color: "#D4AF37",
+                }}
+              />
+            </button>
+            <div
+              id="mobile-services-list"
+              className="mobile-nav-accordion-panel"
+              data-open={mobileServicesOpen ? "true" : "false"}
+            >
+              <div className="mobile-nav-accordion-inner">
+                {SERVICES.map((s) => (
+                  <Link
+                    key={s.slug}
+                    href={`/services/${s.slug}`}
+                    onClick={closeDrawer}
+                    className="mobile-nav-sublink"
+                  >
+                    <span className="mobile-nav-sublink-num">{s.num}</span>
+                    <span>{s.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {[
-            { href: "/#services", label: "Services" },
             { href: "/#process", label: "Process" },
             { href: "/#investment", label: "Investment" },
             { href: "/#results", label: "Results" },
