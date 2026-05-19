@@ -3108,4 +3108,496 @@ a.btn:active {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   PRIORITY 20 — ENHANCED SERVICE PAGE (Automation & Systems first)
+   Drives:
+     • Section I: 3-column deliverable cards
+     • Section II: process timeline with watermarks + gold rule
+     • Section IV: alternating features (dark CSS panel)
+     • Section V: industry applications (tabs/select + panel)
+     • Section VI: FAQ accordion + sticky audit panel
+   Tokens used: #1B2B21, #D4AF37, #F4F1ED, #333333, #0D1610, #243B2C
+═══════════════════════════════════════════════════════════════ */
+
+/* ── SHARED DARK PANEL (used by features, industries, FAQ aside) ── */
+.svc-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 38px 36px 36px;
+  background: #1B2B21;
+  color: #F4F1ED;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  isolation: isolate;
+  overflow: hidden;
+}
+.svc-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(212, 175, 55, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 100%, rgba(42, 66, 50, 0.55) 0%, transparent 60%);
+  z-index: 0;
+}
+.svc-panel > * { position: relative; z-index: 1; }
+.svc-panel--soft { background: #243B2C; }
+.svc-panel--dark { background: #1B2B21; }
+.svc-panel-label {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  font-weight: 400;
+}
+.svc-panel-metric {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 4.4vw, 3.75rem);
+  line-height: 1;
+  color: #F4F1ED;
+  letter-spacing: -0.025em;
+  margin: 4px 0 6px;
+}
+.svc-panel-rule {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: #D4AF37;
+  opacity: 0.85;
+}
+.svc-panel-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.svc-panel-row {
+  position: relative;
+  padding: 12px 0 12px 18px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  font-weight: 300;
+  color: rgba(244, 241, 237, 0.78);
+  border-bottom: 1px solid rgba(244, 241, 237, 0.1);
+}
+.svc-panel-row:last-child { border-bottom: none; }
+.svc-panel-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #D4AF37;
+  opacity: 0.85;
+  transform: translateY(-50%);
+}
+
+/* ── SECTION I — 3-COLUMN DELIVERABLE CARDS (enhanced) ─────── */
+.svc-included-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.svc-included-card {
+  position: relative;
+  padding: 40px 30px 34px;
+  background: #F4F1ED;
+  border: 1px solid rgba(51, 51, 51, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Only transform + opacity animate. */
+  transition: transform 320ms var(--ease), opacity 320ms var(--ease),
+    border-color 320ms var(--ease);
+}
+.svc-included-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #D4AF37;
+}
+.svc-included-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+.svc-included-card-rule {
+  display: none; /* gold top is handled via ::before */
+}
+.svc-included-card-num {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  font-weight: 400;
+}
+.svc-included-card-title {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: #1B2B21;
+  margin: 0;
+}
+.svc-included-card-body {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  font-weight: 300;
+  color: #333333;
+  margin: 0;
+}
+@media (max-width: 1024px) {
+  .svc-included-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  .svc-included-cards { grid-template-columns: 1fr; }
+}
+
+/* ── SECTION II — ANCHORED TIMELINE (watermarks + rule) ────── */
+.svc-process--anchored .svc-process-step { overflow: hidden; }
+.svc-process-watermark {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-12%, -50%);
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 120px;
+  line-height: 1;
+  color: #D4AF37;
+  opacity: 0.04;
+  pointer-events: none;
+  letter-spacing: -0.04em;
+  z-index: 0;
+  user-select: none;
+}
+.svc-process--anchored .svc-process-marker { z-index: 2; }
+.svc-process--anchored .svc-process-content { position: relative; z-index: 2; }
+.svc-process-rule {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: #D4AF37;
+  opacity: 0.85;
+  margin: 4px 0 18px;
+}
+@media (max-width: 768px) {
+  .svc-process-watermark { font-size: 88px; transform: translate(-6%, -50%); }
+}
+
+/* ── SECTION IV — ALTERNATING FEATURES ─────────────────────── */
+.svc-features { background: #F4F1ED; overflow: hidden; }
+.svc-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(64px, 9vw, 120px);
+}
+.svc-feature-block {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: clamp(40px, 6vw, 88px);
+  align-items: center;
+}
+.svc-feature-block[data-flip="true"] { direction: rtl; }
+.svc-feature-block[data-flip="true"] > * { direction: ltr; }
+.svc-feature-panel {
+  /* Inherits .svc-panel base styles. */
+  min-height: 320px;
+}
+.svc-feature-content {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 56ch;
+}
+.svc-feature-index {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: #D4AF37;
+  opacity: 0.85;
+}
+.svc-feature-title {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: #1B2B21;
+  margin: 0;
+}
+.svc-feature-body {
+  font-size: 1rem;
+  line-height: 1.85;
+  font-weight: 300;
+  color: #333333;
+  margin: 0;
+}
+@media (max-width: 1024px) {
+  .svc-feature-block,
+  .svc-feature-block[data-flip="true"] {
+    grid-template-columns: 1fr;
+    direction: ltr;
+    gap: 32px;
+  }
+}
+
+/* ── SECTION V — INDUSTRY APPLICATIONS (tabs / select) ─────── */
+.svc-industries { background: #1B2B21; color: #F4F1ED; isolation: isolate; }
+.svc-industries .section-header { border-bottom-color: rgba(244, 241, 237, 0.14); }
+.svc-industries .eyebrow { color: #D4AF37; }
+
+.svc-industries-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.svc-industries-select-label {
+  display: none;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 237, 0.55);
+}
+.svc-industries-select {
+  display: none;
+  font: inherit;
+  font-size: 15px;
+  padding: 14px 18px;
+  background: #243B2C;
+  color: #F4F1ED;
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1 L6 6 L11 1' stroke='%23D4AF37' stroke-width='1.4' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  padding-right: 44px;
+}
+.svc-industries-tabbar {
+  position: relative;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(244, 241, 237, 0.14);
+  /* hide scrollbar */
+  scrollbar-width: none;
+}
+.svc-industries-tabbar::-webkit-scrollbar { display: none; }
+.svc-industries-tabs {
+  position: relative;
+  display: inline-flex;
+  gap: 0;
+  padding: 0 4px;
+  min-width: 100%;
+}
+.svc-industries-tabs::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: calc(100% / 10);
+  height: 2px;
+  background: #D4AF37;
+  /* Only transform animates the underline. */
+  transform: translateX(calc(var(--active-index, 0) * 100%));
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.svc-industries-tab {
+  font: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 18px 22px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 237, 0.55);
+  white-space: nowrap;
+  /* Only color/opacity animate. */
+  transition: color 220ms var(--ease), opacity 220ms var(--ease);
+  flex: 1 0 calc(100% / 10);
+  text-align: center;
+}
+.svc-industries-tab:hover { color: rgba(244, 241, 237, 0.9); }
+.svc-industries-tab:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 2px;
+  color: #D4AF37;
+}
+.svc-industries-tab.is-active { color: #D4AF37; }
+
+.svc-industries-content {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(36px, 6vw, 72px);
+  align-items: start;
+  /* Tab-switch fade is driven by React key + this transition. */
+  animation: svcIndFade 280ms var(--ease);
+}
+@keyframes svcIndFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.svc-industries-left { max-width: 60ch; }
+.svc-industries-title {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: #F4F1ED;
+  margin: 0 0 18px;
+}
+.svc-industries-context {
+  font-size: 1rem;
+  line-height: 1.85;
+  font-weight: 300;
+  color: rgba(244, 241, 237, 0.78);
+  margin: 0 0 28px;
+}
+.svc-industries-usecases {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.svc-industries-usecase {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: rgba(244, 241, 237, 0.85);
+}
+.svc-industries-check {
+  color: #D4AF37;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (max-width: 1024px) {
+  .svc-industries-content { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .svc-industries-tabbar { display: none; }
+  .svc-industries-select,
+  .svc-industries-select-label { display: block; }
+}
+
+/* ── SECTION VI — FAQ ACCORDION + STICKY PANEL ─────────────── */
+.svc-faq { background: #F4F1ED; }
+.svc-faq-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+}
+.svc-faq-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(51, 51, 51, 0.08);
+}
+.svc-faq-item {
+  border-bottom: 1px solid rgba(51, 51, 51, 0.08);
+}
+.svc-faq-trigger {
+  display: grid;
+  grid-template-columns: 1fr 28px;
+  gap: 24px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 24px 6px;
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: #1B2B21;
+  /* Only color animates here. */
+  transition: color 220ms var(--ease);
+}
+.svc-faq-trigger:hover { color: #D4AF37; }
+.svc-faq-trigger:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 2px;
+}
+.svc-faq-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #D4AF37;
+  /* Only transform animates. */
+  transition: transform 320ms var(--ease);
+}
+.svc-faq-item.is-open .svc-faq-chevron { transform: rotate(180deg); }
+.svc-faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms var(--ease);
+  overflow: hidden;
+}
+.svc-faq-panel[data-open="true"] { grid-template-rows: 1fr; }
+.svc-faq-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 6px 24px;
+}
+.svc-faq-a {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.85;
+  font-weight: 300;
+  color: #333333;
+  max-width: 64ch;
+}
+.svc-faq-aside {
+  position: sticky;
+  top: 120px;
+}
+.svc-faq-cta {
+  margin-top: 10px;
+  align-self: flex-start;
+}
+@media (max-width: 1024px) {
+  .svc-faq-grid { grid-template-columns: 1fr; }
+  .svc-faq-aside { position: static; }
+}
+
+/* ── Reduced motion: neutralise everything added here ──────── */
+@media (prefers-reduced-motion: reduce) {
+  .svc-included-card,
+  .svc-included-card::before,
+  .svc-process-watermark,
+  .svc-industries-tabs::after,
+  .svc-industries-tab,
+  .svc-industries-content,
+  .svc-faq-trigger,
+  .svc-faq-chevron,
+  .svc-faq-panel {
+    transition: none !important;
+    animation: none !important;
+  }
+  .svc-included-card:hover { transform: none; }
+}
+
 

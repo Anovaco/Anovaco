@@ -1,6 +1,25 @@
 export type ProcessStep = { title: string; body: string };
 export type Outcome = { title: string; body: string };
 
+export type FeatureBlock = {
+  title: string;
+  body1: string;
+  body2: string;
+  panelLabel: string;
+  panelMetric: string;
+  panelRows: string[];
+};
+
+export type IndustryApplication = {
+  name: string;
+  context: string;
+  useCases: string[];
+  panelLabel: string;
+  panelRows: string[];
+};
+
+export type FaqItem = { q: string; a: string };
+
 export type ServiceDefinition = {
   num: string;
   slug: string;
@@ -13,6 +32,12 @@ export type ServiceDefinition = {
   outcomes: Outcome[];
   whoItsFor: string;
   pullQuote: string;
+  /** Optional richer sections — when present, the service page renders
+   *  the alternating-features, industry-tabs, and FAQ blocks, and uses
+   *  the redesigned 3-column card grid for "What's Included". */
+  features?: FeatureBlock[];
+  industryApplications?: IndustryApplication[];
+  faqs?: FaqItem[];
 };
 
 export const SERVICES: ServiceDefinition[] = [
@@ -68,6 +93,268 @@ export const SERVICES: ServiceDefinition[] = [
       "Service businesses, clinics, consultancies, and agencies generating inbound leads who are losing revenue to slow follow-up, missed bookings, or manual processes that don't scale.",
     pullQuote:
       "The difference between a business that scales and one that stalls is rarely the product. It's the systems behind it.",
+    features: [
+      {
+        panelLabel: "LEAD RESPONSE TIME",
+        panelMetric: "4 minutes",
+        panelRows: [
+          "Before: 6–48 hours · After: Under 4 min",
+          "Automated across email, SMS, and phone",
+          "Zero manual intervention required",
+        ],
+        title:
+          "Every lead gets a response before your competitors pick up the phone.",
+        body1:
+          "Most businesses lose enquiries not because they don't have a good service, but because they're slow. The first business to respond wins the majority of leads. We automate that response to happen within minutes of every enquiry, regardless of when it arrives.",
+        body2:
+          "The sequence is triggered the moment a lead lands — whether through your website form, your Google Business Profile, or a direct call that goes unanswered. No lead goes cold because someone was busy.",
+      },
+      {
+        panelLabel: "MONTHLY SYSTEM REPORT",
+        panelMetric: "147 actions",
+        panelRows: [
+          "Leads captured · 147",
+          "Follow-ups sent · 203",
+          "Bookings confirmed · 61",
+          "Reviews requested · 44",
+        ],
+        title: "You see exactly what your systems are doing, every month.",
+        body1:
+          "Every automation we build is fully documented and reported on. You receive a plain-language monthly report showing every action your system took, every lead it captured, and every touchpoint it managed on your behalf.",
+        body2:
+          "No black boxes. No dependency on us to explain what your own infrastructure is doing. Full visibility, every month, in language that doesn't require a technical background to understand.",
+      },
+      {
+        panelLabel: "CLIENT ONBOARDING",
+        panelMetric: "Day 1",
+        panelRows: [
+          "Welcome sequence · Sent automatically",
+          "Documents requested · Via secure form",
+          "Calendar invite · Confirmed",
+          "CRM record · Created",
+        ],
+        title:
+          "Your clients experience a professional process from the first touchpoint.",
+        body1:
+          "The onboarding experience is where clients form their lasting impression of your business. We build the sequences that make every new client feel expected, prepared, and in good hands — without requiring any manual effort from your team.",
+        body2:
+          "Every new client triggers the same professional sequence: a welcome message, a document request if needed, a calendar confirmation, and a CRM record. Consistent, automatic, and indistinguishable from a manually managed process.",
+      },
+    ],
+    industryApplications: [
+      {
+        name: "Restaurant & Café",
+        context:
+          "Food and hospitality businesses live and die on reputation and repeat custom. Every missed enquiry and unanswered follow-up is a customer walking to the competitor down the street.",
+        useCases: [
+          "Automated booking confirmations and reminders",
+          "Enquiry response within 4 minutes of contact",
+          "Post-visit review request sequences",
+          "Unanswered call follow-up automation",
+          "Monthly reporting on every lead touchpoint",
+        ],
+        panelLabel: "AUTOMATION SNAPSHOT",
+        panelRows: [
+          "Enquiries auto-responded · 94",
+          "Bookings confirmed · 61",
+          "Review requests sent · 44",
+          "Missed calls followed up · 17",
+        ],
+      },
+      {
+        name: "Salon, Spa & Barbershop",
+        context:
+          "Personal care businesses depend on repeat bookings and word-of-mouth. A structured follow-up system turns one-time clients into regulars without any manual effort.",
+        useCases: [
+          "Post-appointment review request automation",
+          "Rebooking reminder sequences at 4 and 6 weeks",
+          "New client welcome sequences",
+          "Unanswered enquiry follow-up",
+          "CRM integration with booking system",
+        ],
+        panelLabel: "RETENTION SYSTEM",
+        panelRows: [
+          "Rebooking reminders sent · 94",
+          "Clients rebooked · 61",
+          "Reviews generated · 11",
+          "Welcome sequences triggered · 34",
+        ],
+      },
+      {
+        name: "Health & Wellness / Gym",
+        context:
+          "Fitness and wellness businesses need fast lead response and consistent follow-up. A prospect who doesn't hear back within an hour will book with someone else.",
+        useCases: [
+          "Instant lead response for trial and membership enquiries",
+          "New member onboarding sequences",
+          "Lapsed member reactivation campaigns",
+          "Class booking confirmation and reminders",
+          "Review requests after milestone achievements",
+        ],
+        panelLabel: "LEAD PIPELINE",
+        panelRows: [
+          "Enquiries responded in 4 min · 28",
+          "Trial sessions booked · 19",
+          "Members onboarded automatically · 11",
+          "Lapsed members reactivated · 6",
+        ],
+      },
+      {
+        name: "Home Services",
+        context:
+          "Trades and home service businesses win on availability. A lead response system that operates outside business hours captures the jobs your competitors miss.",
+        useCases: [
+          "Out-of-hours lead capture and auto-response",
+          "Quote request follow-up sequences",
+          "Job completion review requests",
+          "Appointment confirmation and reminder sequences",
+          "CRM integration with job management software",
+        ],
+        panelLabel: "QUOTE PIPELINE",
+        panelRows: [
+          "Out-of-hours enquiries captured · 18",
+          "Quote requests followed up · 28",
+          "Jobs confirmed via automation · 23",
+          "Reviews requested post-job · 23",
+        ],
+      },
+      {
+        name: "Retail Store",
+        context:
+          "Retail businesses have high enquiry volume and low follow-up rates. Automation captures the revenue that falls through the cracks between enquiry and purchase.",
+        useCases: [
+          "Website enquiry auto-response",
+          "Abandoned enquiry follow-up sequences",
+          "Post-purchase review requests",
+          "Stock notification automations",
+          "CRM integration with point-of-sale",
+        ],
+        panelLabel: "REVENUE CAPTURE",
+        panelRows: [
+          "Enquiries auto-responded · 147",
+          "Abandoned enquiries followed up · 34",
+          "Reviews requested · 67",
+          "Repeat purchase sequences active · Yes",
+        ],
+      },
+      {
+        name: "Real Estate",
+        context:
+          "Property enquiries have a short window. A lead that doesn't receive a response within 5 minutes is statistically likely to contact another agent. Automation closes that window.",
+        useCases: [
+          "Instant response to portal and website enquiries",
+          "Viewing confirmation and reminder sequences",
+          "Post-transaction review requests",
+          "Referral follow-up sequences",
+          "CRM integration with property management software",
+        ],
+        panelLabel: "LEAD RESPONSE",
+        panelRows: [
+          "Enquiries responded in under 5 min · 41",
+          "Viewings confirmed automatically · 28",
+          "Post-transaction reviews requested · 18",
+          "Referral sequences active · Yes",
+        ],
+      },
+      {
+        name: "Legal & Accounting",
+        context:
+          "Professional services enquiries are high-value and time-sensitive. A structured intake and follow-up process ensures no prospective client is lost to slow response or inconsistent communication.",
+        useCases: [
+          "Consultation booking automation",
+          "Intake form sequences",
+          "Follow-up for non-responsive leads",
+          "Document request and collection workflows",
+          "CRM integration with practice management software",
+        ],
+        panelLabel: "INTAKE SYSTEM",
+        panelRows: [
+          "Consultation requests auto-responded · 34",
+          "Intake forms completed · 28",
+          "Follow-up sequences active · Yes",
+          "Documents collected automatically · 21",
+        ],
+      },
+      {
+        name: "Dental & Medical",
+        context:
+          "Healthcare providers lose patients to practices with faster response and better follow-up. Automated systems capture appointments that would otherwise go to competitors.",
+        useCases: [
+          "New patient enquiry auto-response",
+          "Appointment confirmation and reminder sequences",
+          "Lapsed patient reactivation",
+          "Post-appointment review requests",
+          "CASL-compliant communication sequences",
+        ],
+        panelLabel: "PATIENT PIPELINE",
+        panelRows: [
+          "New enquiries responded in 4 min · 34",
+          "Appointments confirmed automatically · 89",
+          "Lapsed patients reactivated · 14",
+          "Reviews requested post-appointment · 89",
+        ],
+      },
+      {
+        name: "Contractor & Trade",
+        context:
+          "Contractors miss revenue by being unavailable during jobs. An automated lead response and follow-up system captures quotes and confirms bookings without interrupting the work on site.",
+        useCases: [
+          "Out-of-hours enquiry capture and response",
+          "Quote follow-up sequences",
+          "Job confirmation and reminder sequences",
+          "Post-completion review requests",
+          "CRM integration with estimating software",
+        ],
+        panelLabel: "JOB PIPELINE",
+        panelRows: [
+          "Enquiries captured out-of-hours · 18",
+          "Quotes followed up automatically · 28",
+          "Jobs confirmed via automation · 16",
+          "Reviews requested post-completion · 16",
+        ],
+      },
+      {
+        name: "Other",
+        context:
+          "Whatever industry you operate in, the same principle applies — the business that responds fastest and follows up most consistently wins the majority of available work. Automation makes that possible at scale.",
+        useCases: [
+          "Custom enquiry response sequences",
+          "Lead capture and follow-up automation",
+          "Booking and appointment confirmation",
+          "Review request automation",
+          "Monthly reporting across all touchpoints",
+        ],
+        panelLabel: "GROWTH SYSTEMS",
+        panelRows: [
+          "Leads captured · Automated",
+          "Follow-ups sent · Systematic",
+          "Bookings confirmed · Automatic",
+          "Reviews requested · Every time",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "How long does it take to build and deploy the automations?",
+        a: "The majority of automation systems are fully operational within 2–3 weeks of our kickoff session. More complex multi-system integrations can take up to 4–5 weeks. We provide a fixed timeline at the end of your free audit before any work begins.",
+      },
+      {
+        q: "Do I need to change the tools I'm currently using?",
+        a: "Not necessarily. We audit your existing stack and build around it wherever possible. If we identify a tool that is significantly limiting what we can achieve, we'll tell you directly — but we never recommend changes unless the case for doing so is clear.",
+      },
+      {
+        q: "What happens if something breaks after launch?",
+        a: "Every system we build includes a testing phase and a full documentation handover. For the first 30 days post-launch, we monitor and resolve any issues at no additional charge. After that, we offer ongoing maintenance retainers or you can manage it internally using our documentation.",
+      },
+      {
+        q: "Can automated follow-ups feel personal rather than generic?",
+        a: "Yes — and this is one of the most important parts of what we do. Every sequence we write is personalised using the client's name, the service they enquired about, and the context of their enquiry. Done correctly, automated follow-up is indistinguishable from a personal response sent quickly.",
+      },
+      {
+        q: "Do you work with our existing CRM?",
+        a: "We work with the majority of CRM platforms including HubSpot, Salesforce, GoHighLevel, Zoho, and most booking systems. If you're on a less common platform, we'll assess compatibility during the audit and tell you clearly what is and isn't possible.",
+      },
+    ],
   },
   {
     num: "02",
