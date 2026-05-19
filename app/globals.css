@@ -2699,7 +2699,9 @@ a.btn:active {
   position: relative;
   background: var(--green);
   color: var(--canvas);
-  padding: 168px 56px 120px;
+  /* Top padding clears the fixed nav. Bottom padding stays tight so the
+     CTA buttons aren't sitting above a viewport-height void. */
+  padding: 168px 56px 80px;
   isolation: isolate;
   overflow: hidden;
 }
@@ -2779,7 +2781,7 @@ a.btn:active {
 .svc-hero-ctas { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; }
 
 @media (max-width: 1024px) {
-  .svc-hero { padding: 132px 24px 88px; }
+  .svc-hero { padding: 132px 24px 60px; }
   .svc-hero-inner { grid-template-columns: 1fr; gap: 24px; }
   .svc-hero-num { font-size: 1.6rem; }
 }
@@ -3356,6 +3358,9 @@ a.btn:active {
 
 /* ── SECTION V — INDUSTRY APPLICATIONS (tabs / select) ─────── */
 .svc-industries { background: #1B2B21; color: #F4F1ED; isolation: isolate; }
+/* Sit content above the .grain.grain-dark ::before overlay (z-index 1).
+   Without this the entire section reads as a blank dark green void. */
+.svc-industries > * { position: relative; z-index: 2; }
 .svc-industries .section-header { border-bottom-color: rgba(244, 241, 237, 0.14); }
 .svc-industries .eyebrow { color: #D4AF37; }
 
@@ -3573,6 +3578,19 @@ a.btn:active {
 .svc-faq-aside {
   position: sticky;
   top: 120px;
+  /* Explicit: no height constraint on the sticky aside. The shared
+     .svc-panel has overflow:hidden for its gradient; that's safe here
+     because the panel sizes to its content, but we override it on the
+     FAQ-aside panel to guarantee nothing inside (CTA, rows, gradient)
+     can be visually clipped. */
+  max-height: none;
+  height: auto;
+  overflow: visible;
+}
+.svc-faq-aside .svc-panel {
+  overflow: visible;
+  height: auto;
+  max-height: none;
 }
 .svc-faq-cta {
   margin-top: 10px;

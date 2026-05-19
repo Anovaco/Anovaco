@@ -20,6 +20,8 @@ export type IndustryApplication = {
 
 export type FaqItem = { q: string; a: string };
 
+export type DeliverableCard = { title: string; body: string };
+
 export type ServiceDefinition = {
   num: string;
   slug: string;
@@ -38,6 +40,9 @@ export type ServiceDefinition = {
   features?: FeatureBlock[];
   industryApplications?: IndustryApplication[];
   faqs?: FaqItem[];
+  /** Per-item bodies for the redesigned 3-column card grid. When absent,
+   *  the cards fall back to the strings in `included`. */
+  includedDetails?: DeliverableCard[];
 };
 
 export const SERVICES: ServiceDefinition[] = [
@@ -93,6 +98,32 @@ export const SERVICES: ServiceDefinition[] = [
       "Service businesses, clinics, consultancies, and agencies generating inbound leads who are losing revenue to slow follow-up, missed bookings, or manual processes that don't scale.",
     pullQuote:
       "The difference between a business that scales and one that stalls is rarely the product. It's the systems behind it.",
+    includedDetails: [
+      {
+        title: "CRM architecture & integration",
+        body: "We configure or build your CRM from the ground up — contact records, pipeline stages, tags, and automation triggers — so every lead is tracked and nothing falls through the cracks.",
+      },
+      {
+        title: "Automated lead capture and nurture sequences",
+        body: "From the moment a lead submits a form or calls your number, a personalised multi-step sequence begins. Email, SMS, or both — timed, written, and deployed without manual input.",
+      },
+      {
+        title: "Booking, scheduling & confirmation systems",
+        body: "We connect your booking system to your calendar, configure confirmation messages, and build reminder sequences that reduce no-shows and keep your calendar full automatically.",
+      },
+      {
+        title: "Client onboarding and offboarding workflows",
+        body: "Every new client triggers a structured onboarding sequence — welcome message, document collection, calendar confirmation, and CRM record creation. Every departing client receives a professional close-out and review request.",
+      },
+      {
+        title: "Review solicitation pipelines",
+        body: "A timed review request sequence triggers automatically after service delivery, directed to the platform that matters most for your business. No manual chasing, no missed opportunities.",
+      },
+      {
+        title: "Operational audit & system documentation",
+        body: "We map every automated touchpoint and deliver full written documentation of your system — what runs, when it runs, and what to do if anything needs adjusting. You own it completely.",
+      },
+    ],
     features: [
       {
         panelLabel: "LEAD RESPONSE TIME",

@@ -68,18 +68,20 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
 
           {enhanced ? (
             <div className="svc-included-cards">
-              {service.included.map((item, i) => (
-                <article key={item} className="svc-included-card">
+              {(
+                service.includedDetails ??
+                service.included.map((title) => ({ title, body: "" }))
+              ).map((card, i) => (
+                <article key={card.title} className="svc-included-card">
                   <span className="svc-included-card-rule" aria-hidden="true" />
                   <span className="svc-included-card-num">
                     Deliverable&nbsp;&nbsp;·&nbsp;&nbsp;
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="svc-included-card-title">{item}</h3>
-                  <p className="svc-included-card-body">
-                    Delivered end-to-end and documented in full as part of the
-                    engagement scope.
-                  </p>
+                  <h3 className="svc-included-card-title">{card.title}</h3>
+                  {card.body && (
+                    <p className="svc-included-card-body">{card.body}</p>
+                  )}
                 </article>
               ))}
             </div>
