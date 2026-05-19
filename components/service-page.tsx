@@ -7,10 +7,13 @@ import type { ServiceDefinition } from "@/lib/services";
 export function ServicePage({ service }: { service: ServiceDefinition }) {
   return (
     <>
-      <SiteNav forceLight />
+      {/* SiteNav is intentionally left to its scroll-based detection.
+          The hero below carries id="hero" so the nav reads as on-dark at the
+          top of the page and only flips to on-light after the hero scrolls past. */}
+      <SiteNav />
 
       {/* ── HERO ───────────────────────────────────────────────── */}
-      <section className="svc-hero hero-grain">
+      <section id="hero" className="svc-hero hero-grain">
         <div className="svc-hero-inner">
           <div className="svc-hero-num">{service.num}</div>
           <div>
