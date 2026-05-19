@@ -77,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${dmSans.variable} ${playfair.variable}`}>
       <head>
+        <style dangerouslySetInnerHTML={{ __html: "html { background-color: #1B2B21; }" }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}

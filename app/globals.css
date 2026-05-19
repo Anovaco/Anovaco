@@ -401,9 +401,10 @@ body {
 section { position: relative; }
 .section-container { max-width: 1320px; margin: 0 auto; padding: 0 56px; }
 @media (max-width: 1024px) { .section-container { padding: 0 24px; } }
-.section-pad { padding: 168px 0; }
+.section-pad { padding: 96px 0; }
+@media (min-width: 1024px) { .section-pad { padding: 120px 0; } }
 .section-pad-lg { padding: 216px 0; }
-@media (max-width: 1024px) { .section-pad, .section-pad-lg { padding: 115px 0; } }
+@media (max-width: 1024px) { .section-pad-lg { padding: 115px 0; } }
 .section-header {
   display: grid; grid-template-columns: 110px 1fr; gap: 56px; align-items: baseline;
   margin-bottom: 88px; padding-bottom: 36px; border-bottom: 1px solid var(--rule);
