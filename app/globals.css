@@ -2926,3 +2926,186 @@ a.btn:active {
   font-weight: 400;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   PRIORITY 19 — SERVICE PAGE: PROCESS TIMELINE + OUTCOME CARDS
+═══════════════════════════════════════════════════════════════ */
+
+/* ── HOW IT WORKS — vertical numbered timeline ─────────────── */
+.svc-process { background: var(--canvas); overflow: hidden; }
+.svc-process-timeline {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.svc-process-timeline::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: clamp(18px, 6%, 56px);
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    var(--gold),
+    rgba(212, 175, 55, 0.18)
+  );
+}
+.svc-process-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(76px, 14%, 132px) 1fr;
+  align-items: baseline;
+  gap: clamp(28px, 5vw, 64px);
+  padding: 36px 0 40px clamp(0px, 1vw, 12px);
+  border-bottom: 1px solid var(--rule);
+}
+.svc-process-step:last-child { border-bottom: none; padding-bottom: 12px; }
+.svc-process-marker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--canvas);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  box-shadow:
+    0 0 0 6px var(--canvas),
+    0 0 0 7px rgba(212, 175, 55, 0.16),
+    0 14px 28px -18px rgba(27, 43, 33, 0.45);
+  z-index: 1;
+}
+.svc-process-content { padding-left: clamp(12px, 2vw, 28px); max-width: 60ch; }
+.svc-process-title {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.2vw, 1.875rem);
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  color: var(--green);
+  margin: 0 0 14px;
+}
+.svc-process-body {
+  font-size: 1rem;
+  line-height: 1.8;
+  font-weight: 300;
+  color: var(--ink);
+  margin: 0;
+}
+@media (max-width: 768px) {
+  .svc-process-step { grid-template-columns: 56px 1fr; gap: 22px; padding: 28px 0 32px; }
+  .svc-process-content { padding-left: 0; }
+  .svc-process-marker { width: 48px; height: 48px; font-size: 1rem; }
+}
+
+/* ── WHAT YOU CAN EXPECT — outcome cards on green ──────────── */
+.svc-outcomes {
+  background: var(--green);
+  color: var(--canvas);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.svc-outcomes::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(212, 175, 55, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 100%, rgba(42, 66, 50, 0.7) 0%, transparent 60%);
+  z-index: 0;
+}
+.svc-outcomes > * { position: relative; z-index: 2; }
+.svc-outcomes .section-header { border-bottom-color: rgba(244, 241, 237, 0.14); }
+.svc-outcomes .eyebrow { color: var(--gold); }
+
+.svc-outcomes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid rgba(244, 241, 237, 0.14);
+  border-bottom: 1px solid rgba(244, 241, 237, 0.14);
+}
+.svc-outcome-card {
+  position: relative;
+  padding: 48px 36px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border-right: 1px solid rgba(244, 241, 237, 0.14);
+  /* Only transform + opacity animate — nothing else. */
+  transition: transform 320ms var(--ease), opacity 320ms var(--ease);
+}
+.svc-outcome-card:last-child { border-right: none; }
+.svc-outcome-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gold);
+  /* Only width animates — safe. */
+  transition: width 600ms var(--ease);
+}
+.svc-outcome-card:hover::before,
+.svc-outcome-card:focus-within::before { width: 100%; }
+.svc-outcome-rule {
+  display: block;
+  width: 36px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.85;
+}
+.svc-outcome-index {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  opacity: 0.85;
+}
+.svc-outcome-title {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--canvas);
+  margin: 0;
+}
+.svc-outcome-body {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  font-weight: 300;
+  color: rgba(244, 241, 237, 0.72);
+  margin: 0;
+}
+@media (max-width: 1024px) {
+  .svc-outcomes-grid { grid-template-columns: 1fr; }
+  .svc-outcome-card {
+    border-right: none;
+    border-bottom: 1px solid rgba(244, 241, 237, 0.14);
+    padding: 40px 24px 36px;
+  }
+  .svc-outcome-card:last-child { border-bottom: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-outcome-card,
+  .svc-outcome-card::before {
+    transition: none !important;
+  }
+}
+
+

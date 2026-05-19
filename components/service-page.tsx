@@ -63,11 +63,78 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
         </div>
       </section>
 
+      {/* ── HOW IT WORKS (numbered timeline) ───────────────────── */}
+      <section className="section-pad svc-process">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-num">II</div>
+            <div className="section-title-group">
+              <span className="eyebrow on-light">How It Works</span>
+              <h2 className="display-lg" style={{ color: "var(--green)" }}>
+                Four movements.
+                <br />
+                <em className="italic" style={{ color: "var(--gold)" }}>
+                  One outcome.
+                </em>
+              </h2>
+            </div>
+          </div>
+
+          <ol className="svc-process-timeline">
+            {service.processSteps.map((step, i) => (
+              <li key={step.title} className="svc-process-step">
+                <span className="svc-process-marker" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="svc-process-content">
+                  <h3 className="svc-process-title">{step.title}</h3>
+                  <p className="svc-process-body">{step.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ── WHAT YOU CAN EXPECT (outcome cards) ────────────────── */}
+      <section className="section-pad svc-outcomes grain grain-dark">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-num" style={{ color: "var(--gold)" }}>
+              III
+            </div>
+            <div className="section-title-group">
+              <span className="eyebrow">What You Can Expect</span>
+              <h2 className="display-lg" style={{ color: "var(--canvas)" }}>
+                The shape of
+                <br />
+                <em className="italic" style={{ color: "var(--gold)" }}>
+                  the result.
+                </em>
+              </h2>
+            </div>
+          </div>
+
+          <div className="svc-outcomes-grid">
+            {service.outcomes.map((o, i) => (
+              <article key={o.title} className="svc-outcome-card">
+                <span className="svc-outcome-rule" aria-hidden="true" />
+                <span className="svc-outcome-index">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="svc-outcome-title">&ldquo;{o.title}&rdquo;</h3>
+                <p className="svc-outcome-body">{o.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── WHO IT'S FOR ───────────────────────────────────────── */}
       <section className="section-pad svc-audience">
         <div className="section-container">
           <div className="section-header">
-            <div className="section-num">II</div>
+            <div className="section-num">IV</div>
             <div className="section-title-group">
               <span className="eyebrow on-light">Who It&apos;s For</span>
               <h2 className="display-lg" style={{ color: "var(--green)" }}>
