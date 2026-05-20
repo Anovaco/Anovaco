@@ -2780,6 +2780,21 @@ a.btn:active {
 }
 .svc-hero-ctas { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; }
 
+/* The service hero carries id="hero" so the nav's scroll-detection can treat
+   it as a dark section. That id also matches the homepage's #hero rule
+   (min-height:100vh; display:flex; justify-content:space-between), which made
+   the service hero a full viewport tall with a large void below its content.
+   #hero.svc-hero (specificity 1,1,0) beats #hero (1,0,0) and neutralises that
+   layout so the hero sizes to its content. THIS is the blank-gap fix. */
+#hero.svc-hero {
+  min-height: 0;
+  display: block;
+  padding: 168px 56px 80px;
+}
+@media (max-width: 1024px) {
+  #hero.svc-hero { padding: 132px 24px 60px; }
+}
+
 @media (max-width: 1024px) {
   .svc-hero { padding: 132px 24px 60px; }
   .svc-hero-inner { grid-template-columns: 1fr; gap: 24px; }
@@ -3622,19 +3637,14 @@ a.btn:active {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   PRIORITY 21 — ENHANCED PAGE WRAPPER: TIGHTER SECTION SPACING
+   PRIORITY 21 — ENHANCED PAGE WRAPPER: STANDARD SECTION SPACING
    The .svc-page--enhanced class is only applied to services that opt
-   into the redesigned page (currently: automation-systems). It scopes
-   tighter section padding without touching the homepage or the other
-   five service pages, which keep the original .section-pad rhythm.
+   into the redesigned page (currently: automation-systems). It pins
+   every section to a consistent 96px top/bottom rhythm — no viewport
+   gaps, no oversized padding — without touching the homepage or the
+   other five service pages.
 ═══════════════════════════════════════════════════════════════ */
-.svc-page--enhanced .section-pad { padding: 48px 0; }
-@media (min-width: 1024px) {
-  .svc-page--enhanced .section-pad { padding: 72px 0; }
-}
-/* The pull-quote sits between Who It's For and the final CTA. Its
-   section-pad is also tightened by the rule above, but the .svc-statement
-   itself doesn't add its own padding so no further override needed. */
+.svc-page--enhanced .section-pad { padding: 96px 0; }
 
 
 
