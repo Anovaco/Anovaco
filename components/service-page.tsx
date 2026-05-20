@@ -15,14 +15,16 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
 
   // Dynamic section numbering. I / II / III are always present; the rest depend
   // on which data the service ships with.
-  let n = 3; // 1: What's Included, 2: How It Works, 3: What You Can Expect
+  // Order: I What's Included, II How It Works, III What You Can Expect,
+  // IV Features?, V Industries?, VI Who It's For, VII FAQ?.
+  let n = 3;
   const featuresNum = service.features ? ROMAN[n++] : null;
   const industriesNum = service.industryApplications ? ROMAN[n++] : null;
+  const audienceNum = ROMAN[n++];
   const faqsNum = service.faqs ? ROMAN[n++] : null;
-  const audienceNum = ROMAN[n];
 
   return (
-    <>
+    <div className={`svc-page${enhanced ? " svc-page--enhanced" : ""}`}>
       {/* SiteNav is intentionally left to its scroll-based detection.
           The hero below carries id="hero" so the nav reads as on-dark at the
           top of the page and only flips to on-light after the hero scrolls past. */}
@@ -261,29 +263,6 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
         </section>
       )}
 
-      {/* ── SECTION VI — FAQ ───────────────────────────────────── */}
-      {service.faqs && faqsNum && (
-        <section className="section-pad svc-faq">
-          <div className="section-container">
-            <div className="section-header">
-              <div className="section-num">{faqsNum}</div>
-              <div className="section-title-group">
-                <span className="eyebrow on-light">Frequently Asked</span>
-                <h2 className="display-lg" style={{ color: "var(--green)" }}>
-                  Questions worth
-                  <br />
-                  <em className="italic" style={{ color: "var(--gold)" }}>
-                    answering directly.
-                  </em>
-                </h2>
-              </div>
-            </div>
-
-            <ServiceFaq faqs={service.faqs} />
-          </div>
-        </section>
-      )}
-
       {/* ── WHO IT'S FOR ───────────────────────────────────────── */}
       <section className="section-pad svc-audience">
         <div className="section-container">
@@ -319,6 +298,29 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
         </div>
       </section>
 
+      {/* ── FAQ (moved to sit after Who It's For, before the pull quote) ── */}
+      {service.faqs && faqsNum && (
+        <section className="section-pad svc-faq">
+          <div className="section-container">
+            <div className="section-header">
+              <div className="section-num">{faqsNum}</div>
+              <div className="section-title-group">
+                <span className="eyebrow on-light">Frequently Asked</span>
+                <h2 className="display-lg" style={{ color: "var(--green)" }}>
+                  Questions worth
+                  <br />
+                  <em className="italic" style={{ color: "var(--gold)" }}>
+                    answering directly.
+                  </em>
+                </h2>
+              </div>
+            </div>
+
+            <ServiceFaq faqs={service.faqs} />
+          </div>
+        </section>
+      )}
+
       {/* ── PULL QUOTE / STATEMENT ─────────────────────────────── */}
       <section className="svc-statement section-pad grain grain-dark">
         <div className="svc-statement-inner">
@@ -342,6 +344,6 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
       />
 
       <SiteFooter />
-    </>
+    </div>
   );
 }

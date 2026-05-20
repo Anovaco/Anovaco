@@ -3394,6 +3394,9 @@ a.btn:active {
 .svc-industries-tabbar {
   position: relative;
   overflow-x: auto;
+  /* Explicit bg so the tabbar always reads as dark green, even if a
+     parent stacking context interferes with inherited backgrounds. */
+  background-color: #1B2B21;
   border-bottom: 1px solid rgba(244, 241, 237, 0.14);
   /* hide scrollbar */
   scrollbar-width: none;
@@ -3617,5 +3620,21 @@ a.btn:active {
   }
   .svc-included-card:hover { transform: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   PRIORITY 21 — ENHANCED PAGE WRAPPER: TIGHTER SECTION SPACING
+   The .svc-page--enhanced class is only applied to services that opt
+   into the redesigned page (currently: automation-systems). It scopes
+   tighter section padding without touching the homepage or the other
+   five service pages, which keep the original .section-pad rhythm.
+═══════════════════════════════════════════════════════════════ */
+.svc-page--enhanced .section-pad { padding: 48px 0; }
+@media (min-width: 1024px) {
+  .svc-page--enhanced .section-pad { padding: 72px 0; }
+}
+/* The pull-quote sits between Who It's For and the final CTA. Its
+   section-pad is also tightened by the rule above, but the .svc-statement
+   itself doesn't add its own padding so no further override needed. */
+
 
 
