@@ -3645,6 +3645,11 @@ a.btn:active {
    other five service pages.
 ═══════════════════════════════════════════════════════════════ */
 .svc-page--enhanced .section-pad { padding: 96px 0; }
+/* What's Included flows straight into How It Works — drop the included
+   section's bottom padding so the deliverable cards sit close to the next
+   section header instead of leaving a wide canvas band. (0,3,0) specificity
+   beats the rule above (0,2,0). */
+.svc-page--enhanced .svc-included.section-pad { padding-bottom: 24px; }
 
 
 
