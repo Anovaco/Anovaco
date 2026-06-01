@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { google } from "googleapis";
 import { Resend } from "resend";
 import { randomUUID } from "crypto";
-import { format } from "date-fns";
+import * as chrono from "chrono-node";
 import { getConfirmationEmail } from "@/lib/email-templates";
-import { isSlotTaken, parseISODate, torontoLocalToUTC } from "@/lib/google-calendar";
+import { isSlotTaken, torontoLocalToUTC } from "@/lib/google-calendar";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,18 +21,26 @@ type VoicePayload = {
   business_name: string;
   industry: string;
   services_interested?: string;
-  preferred_date: string; // YYYY-MM-DD
-  preferred_time: string; // HH:MM (24h), America/Toronto
+  preferred_datetime: string; // natural language, e.g. "next Monday at 3 PM"
+};
+
+// What we hand to the calendar / email layer — same contract as before.
+type ResolvedBooking = {
+  name: string;
+  email: string;
+  business_name: string;
+  industry: string;
+  services_interested: string;
+  preferred_date: string; // "YYYY-MM-DD" (Toronto local)
+  preferred_time: string; // "HH:MM" 24h (Toronto local)
 };
 
 /* ───────────── Helpers ───────────── */
 
-function formatTime12(t: string): string {
-  const [hRaw, mRaw] = t.split(":");
-  const h = parseInt(hRaw, 10);
-  const period = h >= 12 ? "PM" : "AM";
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}:${mRaw} ${period}`;
+function formatTime12(hour: number, minute: number): string {
+  const period = hour >= 12 ? "PM" : "AM";
+  const h12 = hour % 12 === 0 ? 12 : hour % 12;
+  return `${h12}:${String(minute).padStart(2, "0")} ${period}`;
 }
 
 function firstName(full: string): string {
@@ -70,7 +78,7 @@ function localISOPlusMinutes(
 /* ───────────── Google Calendar ───────────── */
 
 async function createCalendarEvent(
-  p: VoicePayload,
+  p: ResolvedBooking,
   y: number,
   mo: number,
   d: number,
@@ -155,7 +163,7 @@ async function createCalendarEvent(
 /* ───────────── Emails (Resend) ───────────── */
 
 function renderNotifyEmail(
-  p: VoicePayload,
+  p: ResolvedBooking,
   humanDate: string,
   humanTime: string,
   calendarSucceeded: boolean,
@@ -182,7 +190,7 @@ Google Meet link: ${escapeHtml(meetLink || "Not generated")}
 }
 
 async function sendEmails(
-  p: VoicePayload,
+  p: ResolvedBooking,
   meetLink: string,
   humanDate: string,
   humanTime: string,
@@ -226,8 +234,8 @@ async function sendEmails(
 
 /* ───────────── Route handler ───────────── */
 
-function badRequest(error: string) {
-  return NextResponse.json({ success: false, error }, { status: 400 });
+function badRequest(message: string) {
+  return NextResponse.json({ success: false, message }, { status: 400 });
 }
 
 export async function POST(req: Request) {
@@ -255,8 +263,7 @@ export async function POST(req: Request) {
     "email",
     "business_name",
     "industry",
-    "preferred_date",
-    "preferred_time",
+    "preferred_datetime",
   ];
   for (const k of required) {
     const v = payload[k];
@@ -277,42 +284,77 @@ export async function POST(req: Request) {
   const business_name = payload.business_name.trim();
   const industry = payload.industry.trim();
   const services_interested = payload.services_interested?.trim() || "";
-  const preferred_date = payload.preferred_date.trim();
-  const preferred_time = payload.preferred_time.trim();
+  const preferred_datetime = payload.preferred_datetime.trim();
 
   // 4. Validate email format
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return badRequest("Invalid email address");
   }
 
-  // 4. Validate date — must be a real YYYY-MM-DD calendar date
-  const parsed = parseISODate(preferred_date);
-  if (!parsed) {
-    return badRequest("Invalid preferred_date — expected format YYYY-MM-DD");
+  // 5. Resolve the natural-language datetime in Toronto wall-clock.
+  // Anchor chrono to "now in Toronto" — pulled as a wall-clock string and re-
+  // parsed by Date, so the components come back as Toronto-local regardless of
+  // the server's actual timezone. DST is handled by toLocaleString.
+  const torontoNowString = new Date().toLocaleString("en-US", { timeZone: TZ });
+  const referenceDate = new Date(torontoNowString);
+  const parsedResults = chrono.parse(preferred_datetime, referenceDate, {
+    forwardDate: true,
+  });
+  if (parsedResults.length === 0) {
+    return badRequest(
+      "I didn't catch the date and time — could you say it again?",
+    );
   }
-  const { y, mo, d } = parsed;
-  const probe = new Date(y, mo - 1, d);
+  const start = parsedResults[0].start;
+  const year = start.get("year");
+  const month = start.get("month"); // 1-indexed
+  const day = start.get("day");
+  const hour = start.get("hour"); // 0-23
+  const minute = start.get("minute") ?? 0;
+
   if (
-    probe.getFullYear() !== y ||
-    probe.getMonth() !== mo - 1 ||
-    probe.getDate() !== d
+    year == null ||
+    month == null ||
+    day == null
   ) {
-    return badRequest("Invalid preferred_date — not a real calendar date");
+    return badRequest(
+      "I didn't catch the date — could you say it again?",
+    );
+  }
+  if (hour == null) {
+    return badRequest(
+      "I didn't catch the time — could you say it again?",
+    );
   }
 
-  // 4. Validate time — HH:MM 24-hour
-  const timeMatch = preferred_time.match(/^([01]\d|2[0-3]):([0-5]\d)$/);
-  if (!timeMatch) {
-    return badRequest("Invalid preferred_time — expected format HH:MM (24-hour)");
+  // Past-check: compare actual UTC instants so DST and server-TZ can't fool us.
+  // The resolved components are Toronto wall-clock → convert to a true UTC
+  // instant via torontoLocalToUTC, then compare against the real "now".
+  const resolvedUTC = torontoLocalToUTC(year, month, day, hour, minute);
+  if (resolvedUTC.getTime() < Date.now()) {
+    return badRequest(
+      "That time is in the past — could you pick a future date?",
+    );
   }
-  const h = parseInt(timeMatch[1], 10);
-  const mi = parseInt(timeMatch[2], 10);
 
-  // Human-formatted date/time for emails, subjects, and the response message
-  const humanDate = format(probe, "EEEE, MMMM d, yyyy");
-  const humanTime = formatTime12(preferred_time);
+  // 6. Convert to the calendar/email contract: YYYY-MM-DD + HH:MM (24h).
+  const preferred_date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  const preferred_time = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 
-  const normalized: VoicePayload = {
+  // 7. Human-readable strings for the agent to read back and for emails.
+  // Build a UTC-noon Date from the components so the weekday is derived from
+  // the resolved date itself — no timezone off-by-one possible.
+  const utcNoon = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  const confirmedDate = utcNoon.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  const confirmedTime = formatTime12(hour, minute);
+
+  const resolved: ResolvedBooking = {
     name,
     email,
     business_name,
@@ -322,9 +364,9 @@ export async function POST(req: Request) {
     preferred_time,
   };
 
-  // 5. Block double-bookings. Google Calendar is the source of truth.
+  // 8. Block double-bookings. Google Calendar is the source of truth.
   try {
-    const taken = await isSlotTaken(y, mo, d, h, mi);
+    const taken = await isSlotTaken(year, month, day, hour, minute);
     if (taken) {
       return NextResponse.json(
         {
@@ -339,27 +381,30 @@ export async function POST(req: Request) {
     console.error("[voice-book] freebusy preflight failed — proceeding:", err);
   }
 
-  // 6. Create the calendar event (non-blocking on failure)
-  const calResult = await createCalendarEvent(normalized, y, mo, d, h, mi);
+  // 9. Create the calendar event (non-blocking on failure)
+  const calResult = await createCalendarEvent(resolved, year, month, day, hour, minute);
   const meetLink = calResult?.meetLink || "";
   const calendarSucceeded = !!calResult;
 
-  // 7. Send confirmation + internal notification emails
-  const bookingDateTime = torontoLocalToUTC(y, mo, d, h, mi).toISOString();
+  // 10. Send confirmation + internal notification emails
+  const bookingDateTime = resolvedUTC.toISOString();
   await sendEmails(
-    normalized,
+    resolved,
     meetLink,
-    humanDate,
-    humanTime,
+    confirmedDate,
+    confirmedTime,
     bookingDateTime,
     calendarSucceeded,
   );
 
-  // 8. Success response
+  // 11. Success response — echo back the resolved date/time so the agent
+  // reads back exactly what the backend booked.
   return NextResponse.json({
     success: true,
     meetLink,
     calendarSucceeded,
-    message: `Booking confirmed for ${humanDate} at ${humanTime}. A confirmation email has been sent to ${email}.`,
+    confirmedDate,
+    confirmedTime,
+    message: `Booking confirmed for ${confirmedDate} at ${confirmedTime}.`,
   });
 }
