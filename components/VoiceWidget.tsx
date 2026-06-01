@@ -3,7 +3,8 @@
 import Script from "next/script";
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
 
-declare global {
+declare module "react" {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
       "elevenlabs-convai": DetailedHTMLProps<
